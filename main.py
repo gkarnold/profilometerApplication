@@ -3,6 +3,7 @@ This is the main run file for the profilometer program.
 This program will load the UI on the main thread and spawn a second thread with
 the system controller on it.
 Some random changes made online so we can test pulling.
+Random changes made on the computer for testing of source tree.
 '''
 
 # Imports
