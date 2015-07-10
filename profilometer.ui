@@ -16,7 +16,7 @@
   <widget class="QPushButton" name="buttonOrigin">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>30</x>
      <y>350</y>
      <width>81</width>
      <height>41</height>
@@ -129,7 +129,7 @@
   <widget class="QPushButton" name="buttonCalibrate">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>100</x>
      <y>350</y>
      <width>81</width>
      <height>41</height>
@@ -193,7 +193,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="labelTravelDistance">
         <property name="text">
-         <string>Travel Distance:</string>
+         <string>Travel Distance(mm):</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -203,7 +203,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="labelStepSize">
         <property name="text">
-         <string>Step Size:</string>
+         <string>Step Size(µm):</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -231,7 +231,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>30</x>
      <y>280</y>
      <width>151</width>
      <height>66</height>
@@ -282,12 +282,12 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>250</y>
-     <width>171</width>
+     <width>191</width>
      <height>23</height>
     </rect>
    </property>
@@ -295,7 +295,7 @@
     <item>
      <widget class="QLabel" name="labelMovementDistance">
       <property name="text">
-       <string>Movement Distance:</string>
+       <string>Movement Distance(mm):</string>
       </property>
      </widget>
     </item>
@@ -311,6 +311,7 @@
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
   <zorder>buttonOrigin</zorder>
   <zorder>buttonStartStop</zorder>
   <zorder>frameProfileDisplay</zorder>
@@ -318,9 +319,25 @@
   <zorder>labelSubstrateControls</zorder>
   <zorder>groupBoxTravelDirection</zorder>
   <zorder>buttonCalibrate</zorder>
-  <zorder>entryBoxMovementDistance</zorder>
-  <zorder>labelMovementDistance</zorder>
  </widget>
+ <tabstops>
+  <tabstop>entryBoxTravelDistance</tabstop>
+  <tabstop>entryBoxStepSize</tabstop>
+  <tabstop>radioButtonX</tabstop>
+  <tabstop>radioButtonY</tabstop>
+  <tabstop>buttonStartStop</tabstop>
+  <tabstop>entryBoxMovementDistance</tabstop>
+  <tabstop>buttonXPositive</tabstop>
+  <tabstop>buttonYPositive</tabstop>
+  <tabstop>buttonZPositive</tabstop>
+  <tabstop>buttonXNegative</tabstop>
+  <tabstop>buttonYNegative</tabstop>
+  <tabstop>buttonZNegative</tabstop>
+  <tabstop>buttonOrigin</tabstop>
+  <tabstop>buttonCalibrate</tabstop>
+  <tabstop>entryBoxFileName</tabstop>
+  <tabstop>buttonSave</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

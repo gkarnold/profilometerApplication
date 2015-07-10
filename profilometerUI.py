@@ -42,7 +42,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         formProfilometer.resize(655, 396)
         formProfilometer.move(30,30)
         self.buttonOrigin = QtGui.QPushButton(formProfilometer)
-        self.buttonOrigin.setGeometry(QtCore.QRect(20, 350, 81, 41))
+        self.buttonOrigin.setGeometry(QtCore.QRect(30, 350, 81, 41))
         self.buttonOrigin.setObjectName(_fromUtf8("buttonOrigin"))
         self.buttonStartStop = QtGui.QPushButton(formProfilometer)
         self.buttonStartStop.setGeometry(QtCore.QRect(40, 150, 110, 61))
@@ -78,7 +78,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.radioButtonY.setObjectName(_fromUtf8("radioButtonY"))
         self.layoutTravelDirection.addWidget(self.radioButtonY)
         self.buttonCalibrate = QtGui.QPushButton(formProfilometer)
-        self.buttonCalibrate.setGeometry(QtCore.QRect(90, 350, 81, 41))
+        self.buttonCalibrate.setGeometry(QtCore.QRect(100, 350, 81, 41))
         self.buttonCalibrate.setObjectName(_fromUtf8("buttonCalibrate"))
         self.layoutWidget1 = QtGui.QWidget(formProfilometer)
         self.layoutWidget1.setGeometry(QtCore.QRect(210, 350, 431, 33))
@@ -123,7 +123,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.layoutProfilometerSettings.addWidget(self.entryBoxTravelDistance, 0, 1, 1, 1)
         self.layoutProfilometerControls.addLayout(self.layoutProfilometerSettings)
         self.layoutWidget3 = QtGui.QWidget(formProfilometer)
-        self.layoutWidget3.setGeometry(QtCore.QRect(20, 280, 151, 66))
+        self.layoutWidget3.setGeometry(QtCore.QRect(30, 280, 151, 66))
         self.layoutWidget3.setObjectName(_fromUtf8("layoutWidget3"))
         self.layoutButtonsMovementDirections = QtGui.QGridLayout(self.layoutWidget3)
         self.layoutButtonsMovementDirections.setMargin(0)
@@ -146,21 +146,36 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZNegative = QtGui.QPushButton(self.layoutWidget3)
         self.buttonZNegative.setObjectName(_fromUtf8("buttonZNegative"))
         self.layoutButtonsMovementDirections.addWidget(self.buttonZNegative, 1, 2, 1, 1)
-        self.widget = QtGui.QWidget(formProfilometer)
-        self.widget.setGeometry(QtCore.QRect(10, 250, 171, 23))
-        self.widget.setObjectName(_fromUtf8("widget"))
-        self.layoutMovemetDistance = QtGui.QHBoxLayout(self.widget)
+        self.layoutWidget4 = QtGui.QWidget(formProfilometer)
+        self.layoutWidget4.setGeometry(QtCore.QRect(10, 250, 191, 23))
+        self.layoutWidget4.setObjectName(_fromUtf8("layoutWidget4"))
+        self.layoutMovemetDistance = QtGui.QHBoxLayout(self.layoutWidget4)
         self.layoutMovemetDistance.setMargin(0)
         self.layoutMovemetDistance.setObjectName(_fromUtf8("layoutMovemetDistance"))
-        self.labelMovementDistance = QtGui.QLabel(self.widget)
+        self.labelMovementDistance = QtGui.QLabel(self.layoutWidget4)
         self.labelMovementDistance.setObjectName(_fromUtf8("labelMovementDistance"))
         self.layoutMovemetDistance.addWidget(self.labelMovementDistance)
-        self.entryBoxMovementDistance = QtGui.QLineEdit(self.widget)
+        self.entryBoxMovementDistance = QtGui.QLineEdit(self.layoutWidget4)
         self.entryBoxMovementDistance.setObjectName(_fromUtf8("entryBoxMovementDistance"))
         self.layoutMovemetDistance.addWidget(self.entryBoxMovementDistance)
 
         self.retranslateUi(formProfilometer)
         QtCore.QMetaObject.connectSlotsByName(formProfilometer)
+        formProfilometer.setTabOrder(self.entryBoxTravelDistance, self.entryBoxStepSize)
+        formProfilometer.setTabOrder(self.entryBoxStepSize, self.radioButtonX)
+        formProfilometer.setTabOrder(self.radioButtonX, self.radioButtonY)
+        formProfilometer.setTabOrder(self.radioButtonY, self.buttonStartStop)
+        formProfilometer.setTabOrder(self.buttonStartStop, self.entryBoxMovementDistance)
+        formProfilometer.setTabOrder(self.entryBoxMovementDistance, self.buttonXPositive)
+        formProfilometer.setTabOrder(self.buttonXPositive, self.buttonYPositive)
+        formProfilometer.setTabOrder(self.buttonYPositive, self.buttonZPositive)
+        formProfilometer.setTabOrder(self.buttonZPositive, self.buttonXNegative)
+        formProfilometer.setTabOrder(self.buttonXNegative, self.buttonYNegative)
+        formProfilometer.setTabOrder(self.buttonYNegative, self.buttonZNegative)
+        formProfilometer.setTabOrder(self.buttonZNegative, self.buttonOrigin)
+        formProfilometer.setTabOrder(self.buttonOrigin, self.buttonCalibrate)
+        formProfilometer.setTabOrder(self.buttonCalibrate, self.entryBoxFileName)
+        formProfilometer.setTabOrder(self.entryBoxFileName, self.buttonSave)
 
     # Code specifying what the display text of the elements and what to do when they are interacted with (generated)
     def retranslateUi(self, formProfilometer):
@@ -175,8 +190,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.labelFileName.setText(_translate("formProfilometer", "File Name:", None))
         self.buttonSave.setText(_translate("formProfilometer", "Save", None))
         self.labelProfilometerControls.setText(_translate("formProfilometer", "Profilometer Controls", None))
-        self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance:", None))
-        self.labelStepSize.setText(_translate("formProfilometer", "Step Size:", None))
+        self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance(mm):", None))
+        self.labelStepSize.setText(_translate("formProfilometer", "Step Size(um):", None))
         self.entryBoxStepSize.setText(_translate("formProfilometer", "0", None))
         self.entryBoxTravelDistance.setText(_translate("formProfilometer", "0", None))
         self.buttonXPositive.setText(_translate("formProfilometer", "+ X", None))
@@ -185,8 +200,9 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonXNegative.setText(_translate("formProfilometer", "- X", None))
         self.buttonYNegative.setText(_translate("formProfilometer", "- Y", None))
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
-        self.labelMovementDistance.setText(_translate("formProfilometer", "Movement Distance:", None))
+        self.labelMovementDistance.setText(_translate("formProfilometer", "Movement Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
+
 
         # Button clicked commands added after generation, these direct the program to the correct method upon each button click
         self.buttonStartStop.clicked.connect(self.buttonClickedStartStop)
@@ -244,9 +260,9 @@ class Ui_formProfilometer(QtGui.QWidget):
 
     # Method for clicking the manual movement buttons.
     # Moves the stage in the specified direction direction by specified amount.
-    def buttonClickedManualMove(self,stageMovementManualDirection,stageMovementManualDistance):
+    def buttonClickedManualMove(self,_stageMovementManualDirection,_stageMovementManualDistance):
         print('Manual Move Clicked')
-        self.systemController.moveTheStage(stageMovementManualDirection,stageMovementManualDistance)
+        self.systemController.moveTheStage(_stageMovementManualDirection,_stageMovementManualDistance)
 
     # Method for determining which direction to run the profilometer routine
     def retrieveProfilometerRoutineDirection(self):
@@ -269,17 +285,17 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.systemControllerThread.daemon = True
         self.systemControllerThread.start()
 
-    # Method for changing the clickability of the manual movement buttons
-    def updateMovementButtonsState(self,condition):
-        self.buttonOrigin.setEnabled(condition)
-        self.buttonCalibrate.setEnabled(condition)
-        self.buttonXPositive.setEnabled(condition)
-        self.buttonXNegative.setEnabled(condition)
-        self.buttonYPositive.setEnabled(condition)
-        self.buttonYNegative.setEnabled(condition)
-        self.buttonZPositive.setEnabled(condition)
-        self.buttonZNegative.setEnabled(condition)
-        self.buttonSave.setEnabled(condition)
+    # Method for changing the clickability of the manual movement and save buttons
+    def updateMovementButtonsState(self,_condition):
+        self.buttonOrigin.setEnabled(_condition)
+        self.buttonCalibrate.setEnabled(_condition)
+        self.buttonXPositive.setEnabled(_condition)
+        self.buttonXNegative.setEnabled(_condition)
+        self.buttonYPositive.setEnabled(_condition)
+        self.buttonYNegative.setEnabled(_condition)
+        self.buttonZPositive.setEnabled(_condition)
+        self.buttonZNegative.setEnabled(_condition)
+        self.buttonSave.setEnabled(_condition)
 
 def main():
     # Creates the GUI application
