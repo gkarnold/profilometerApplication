@@ -8,7 +8,7 @@ The functionality was added after the code was generated.
 import sys
 import threading
 from PyQt4 import QtCore, QtGui
-import profilometerVariables
+import profilometerParameters
 import profilometerSystemController
 
 
@@ -204,14 +204,22 @@ class Ui_formProfilometer(QtGui.QWidget):
     # Method for clicking the start/stop button
     def buttonClickedStartStop(self):
         # If statement that cycles through the start/stop functionality of the button
-        if profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning') == True:
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',False)
+        if profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == True:
+            # Update the profilometer routine running to False
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
             print('Profilometer Routine Stopped')
 
-        elif profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning') == False:
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',True)
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',True)
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection',self.)
+        elif profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == False:
+            # Updates the profilometer routine running to True
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,True)
+            # Updates the profilometer start flag to True
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,True)
+            # Updates the profilometer routine direction based on the radio button selected
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,self.getProfilometerRoutineDirection())
+            # Updates the profilometer routine step size based on the value entered into the entry box
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize,self.entryBoxStepSize.text())
+            # Updates the profilometer routine travel distance based on the value entered into the entry box
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,self.entryBoxTravelDistance.text())
             print('Profilometer Routine Started')
 
     # Method for clicking the save button.
@@ -242,10 +250,10 @@ class Ui_formProfilometer(QtGui.QWidget):
         # If statements that checks which direction radio button is selected.
         if self.radioButtonX.isChecked():
             print('X Direction')
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','X')
+            return 'X'
         elif self.radioButtonY.isChecked():
             print('Y Direction')
-            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','Y')
+            return 'Y'
 
 
     # Method for initializing the equipment.

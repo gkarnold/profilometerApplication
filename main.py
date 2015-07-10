@@ -8,7 +8,7 @@ New comment
 # Imports
 import sys
 import threading
-import profilometerVariables # File containing the global variables for the appliction
+import profilometerParameters # File containing the global variables for the appliction
 import profilometerUI # File containing the UI
 import profilometerSystemController # File containing the System Controller
 
@@ -16,7 +16,7 @@ import profilometerSystemController # File containing the System Controller
 
 def main():
     # Initalize the global variables
-    profilometerVariables.init()
+    profilometerParameters.init()
 
 
     # Starting up the UI

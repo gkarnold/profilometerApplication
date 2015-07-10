@@ -6,7 +6,7 @@ The system controller handles the data and controls the equipment
 # Imports
 import threading # threading is used for creating multiple threads
 import time
-import profilometerVariables
+import profilometerParameters
 import profilometerXYZStages # File containing XYZStages class
 import profilometerAgilent34461a # File containing Agilent 34461a class
 
@@ -19,7 +19,9 @@ class systemController(threading.Thread):
         print('systemController initialized')
 
         # TEMP VARIABLE INITIALIZATION #
-        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','X')
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,'X')
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize,'0')
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,'0')
 
     def run(self):
         print('systemController run')
@@ -32,7 +34,7 @@ class systemController(threading.Thread):
             self.getVariables()
 
             if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
-                self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection)
+                self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection,self.systemControllerProfilometerRoutineTravelDirection,self.systemControllerProfilometerRoutineStepSize)
 
             if not self.systemControllerProfilometerRoutineRunning: # False - profilometer routine is not running
                 time.sleep(.5)
@@ -42,8 +44,8 @@ class systemController(threading.Thread):
     # Initializes the equipment
     def initializeEquipment(self):
         print('systemController initialized equipment')
-        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',False)
-        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',False)
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
         self.Agilent34461a = profilometerAgilent34461a.agilent34461a()
         self.stages = profilometerXYZStages.XYZStages()
 
@@ -59,22 +61,31 @@ class systemController(threading.Thread):
     def moveStageToOrigin(self):
         self.stages.moveToOrigin()
 
+    # Method to determine if the profilometer is properly calibrated
     def calibrateProfilometer(self):
         self.stages.moveStages('+Z',.5)
-        self.Agilent34461a.getReading()
+        self.Agilent34461a.retrieveReading()
 
-    def profilometerRoutine(self,direction):
+    # Method that runs the profilometer routine
+    def profilometerRoutine(self,direction,travelDistance,stepSize):
+        # If statement that checks to make sure a valid direction has been entered
         if direction == 'X' or direction == 'Y':
-            for i in range(3):
-                self.stages.moveStages(direction,i)
-                self.Agilent34461a.getReading()
-                time.sleep(.5)
+            i = 0
+            # While look that starts at 0 and moves the stage by step size until travel distance has been reached
+            # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
+            while i <= float(travelDistance):
+                self.Agilent34461a.retrieveReading()
+                self.stages.moveStages(direction,float(stepSize))
+                i = i + float(stepSize)
+            print('Profilometer Routine Complete')
         else:
             print('Please select a direction')
             return
 
     def getVariables(self):
-        self.systemControllerProfilometerRoutineStart = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineStart')
-        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',False)
-        self.systemControllerProfilometerRoutineRunning = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning')
-        self.systemControllerProfilometerRoutineDirection = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineDirection')
+        self.systemControllerProfilometerRoutineStart = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart)
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
+        self.systemControllerProfilometerRoutineRunning = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning)
+        self.systemControllerProfilometerRoutineDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection)
+        self.systemControllerProfilometerRoutineStepSize = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize)
+        self.systemControllerProfilometerRoutineTravelDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance)
