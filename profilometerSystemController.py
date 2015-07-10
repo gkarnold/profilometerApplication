@@ -78,8 +78,8 @@ class systemController(threading.Thread):
                     print('MID PRINTING STOP')
                     break
                 self.Agilent34461a.retrieveReading()
-                self.stages.moveStages(direction,float(stepSize))
-                i = i + float(stepSize)
+                self.stages.moveStages(direction,float(stepSize)/1000)
+                i = i + float(stepSize)/1000
             print('Profilometer Routine Complete')
         else:
             print('Please select a direction')
