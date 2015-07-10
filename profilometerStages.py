@@ -61,7 +61,7 @@ class stages(profilometerEquipment.equipment):
         return
 
     def moveStages(self,direction,distance):
-        print('Stages moved in {} by {}.'.format(direction,distance))
+        print('Stages moved in {} by {} mm.'.format(direction,distance))
 
     def moveToOrigin(self):
         print('Stages moved to origin')
