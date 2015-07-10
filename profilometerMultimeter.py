@@ -5,6 +5,7 @@ This is for the profilometer program
 
 # Imports
 import profilometerEquipment # Imports the equipment file for equipment inheritance
+import time # used to hold the program while the profilometer is allowed to reach equlibrium
 
 class multimeter(profilometerEquipment.equipment):
 
@@ -13,5 +14,11 @@ class multimeter(profilometerEquipment.equipment):
         print('Multimeter Initialized')
         return
 
-    def getReading(self):
-        print('Multimeter reading')
+    def retrieveReading(self):
+        print('Multimeter reading started')
+        self.reachEquilibrium()
+        print('Multimeter reading finished')
+
+    def reachEquilibrium(self):
+        time.sleep(1.5)
+        return
