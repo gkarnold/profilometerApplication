@@ -1,9 +1,6 @@
 def init():
     global globalVariables
     globalVariables = {}
-    globalVariables['allowStageMovement'] = True
-    globalVariables['counter'] = 0
-    globalVariables['systemControllerController'] = False
 
 def setDictionaryVariable(key,value):
     globalVariables[key] = value
@@ -13,6 +10,9 @@ def removeDictionaryVariable(key):
 
 def getDictionaryVariable(key):
     return globalVariables[key]
+
+def getEntireDictionary():
+    return globalVariables
 
 def setVariable(variable,value):
     pass

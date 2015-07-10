@@ -17,33 +17,39 @@ class systemController(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         print('systemController initialized')
-        self.getVariables()
+
+        # TEMP VARIABLE INITIALIZATION #
+        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','X')
 
     def run(self):
         print('systemController run')
         self.initializeEquipment()
         self.initializeData()
+        self.getVariables()
+
         print('Starting controller while loop')
         while True:
-        #     if not self.getVariables(): # False
-        #         time.sleep(2)
-        #     elif self.getVariables(): # True
-        #         # stageMove = threading.Thread(target=self.stages.moveToOrigin())
-        #         # stageMove.start()
-        #         # print('move done')
-        #         # print('true')
-        #         time.sleep(2)
+            self.getVariables()
+
+            if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
+                self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection)
+
+            if not self.systemControllerProfilometerRoutineRunning: # False - profilometer routine is not running
+                time.sleep(.5)
+            elif self.systemControllerProfilometerRoutineRunning: # True - profilometer routine is running
+                time.sleep(2)
 
     # Initializes the equipment
     def initializeEquipment(self):
         print('systemController initialized equipment')
+        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',False)
+        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',False)
         self.Agilent34461a = profilometerAgilent34461a.agilent34461a()
         self.stages = profilometerXYZStages.XYZStages()
 
     # Initializes the Data
     def initializeData(self):
         print('systemController initialized data')
-        print(threading.currentThread())
 
     # Method to move the stages in the specified direction by the specified amount
     def moveTheStage(self,direction,distance):
@@ -68,5 +74,7 @@ class systemController(threading.Thread):
             return
 
     def getVariables(self):
-        keepLoopRunning = profilometerVariables.getDictionaryVariable('systemControllerController')
-        return keepLoopRunning
+        self.systemControllerProfilometerRoutineStart = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineStart')
+        profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',False)
+        self.systemControllerProfilometerRoutineRunning = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning')
+        self.systemControllerProfilometerRoutineDirection = profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineDirection')

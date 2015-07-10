@@ -193,43 +193,26 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonSave.clicked.connect(self.buttonClickedSave)
         self.buttonOrigin.clicked.connect(self.buttonClickedOrigin)
         self.buttonCalibrate.clicked.connect(self.buttonClickedCalibrate)
-        self.buttonXPositive.clicked.connect(self.buttonClickedXPositive)
-        self.buttonXNegative.clicked.connect(self.buttonClickedXNegative)
-        self.buttonYPositive.clicked.connect(self.buttonClickedYPositive)
-        self.buttonYNegative.clicked.connect(self.buttonClickedYNegative)
-        self.buttonZPositive.clicked.connect(self.buttonClickedZPositive)
-        self.buttonZNegative.clicked.connect(self.buttonClickedZNegative)
+        # Manual stage movement clicked commands
+        self.buttonXPositive.clicked.connect(lambda: self.buttonClickedManualMove('+X',self.entryBoxMovementDistance.text()))
+        self.buttonXNegative.clicked.connect(lambda: self.buttonClickedManualMove('-X',self.entryBoxMovementDistance.text()))
+        self.buttonYPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Y',self.entryBoxMovementDistance.text()))
+        self.buttonYNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Y',self.entryBoxMovementDistance.text()))
+        self.buttonZPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Z',self.entryBoxMovementDistance.text()))
+        self.buttonZNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Z',self.entryBoxMovementDistance.text()))
 
     # Method for clicking the start/stop button
     def buttonClickedStartStop(self):
-        global globalVariables
-        # If statement hat cycles through the start/stop functionality of the button
-        if profilometerVariables.getDictionaryVariable('counter') == 0:
-            profilometerVariables.setDictionaryVariable('allowStageMovement',True)
-            profilometerVariables.setDictionaryVariable('systemControllerController',True)
-            profilometerVariables.setDictionaryVariable('counter',1)
+        # If statement that cycles through the start/stop functionality of the button
+        if profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning') == True:
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',False)
+            print('Profilometer Routine Stopped')
 
-        elif profilometerVariables.getDictionaryVariable('counter') == 1:
-            profilometerVariables.setDictionaryVariable('allowStageMovement',False)
-            profilometerVariables.setDictionaryVariable('systemControllerController',False)
-            profilometerVariables.setDictionaryVariable('counter',0)
-
-        print('Current Thread Count: ' + str(threading.activeCount()))
-
-        # If statements that checks which direction radio button is selected and
-        # begins the appropriate movement routine.
-        if self.radioButtonX.isChecked():
-            print('X Direction')
-            self.direction = 'X'
-        elif self.radioButtonY.isChecked():
-            print('Y Direction')
-            self.direction = 'Y'
-        else:
-            print('No Direction Specified')
-        print('Start/Stop Clicked')
-        print(profilometerVariables.getDictionaryVariable('systemControllerController'))
-        # self.systemController.profilometerRoutine(self.direction)
-
+        elif profilometerVariables.getDictionaryVariable('systemControllerProfilometerRoutineRunning') == False:
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineRunning',True)
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineStart',True)
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection',self.)
+            print('Profilometer Routine Started')
 
     # Method for clicking the save button.
     # This saves the profilomter data to the file name specified.
@@ -248,48 +231,28 @@ class Ui_formProfilometer(QtGui.QWidget):
         # self.systemController.initializeData()
         # self.systemControllerThread.systemController.initializeData()
 
-    # Method for clicking the +X button.
-    # Moves the stage in the positive X direction by specified amount.
-    def buttonClickedXPositive(self):
-        print('+X Clicked')
-        self.systemController.moveTheStage('+X',self.entryBoxMovementDistance.text())
+    # Method for clicking the manual movement buttons.
+    # Moves the stage in the specified direction direction by specified amount.
+    def buttonClickedManualMove(self,stageMovementManualDirection,stageMovementManualDistance):
+        print('Manual Move Clicked')
+        self.systemController.moveTheStage(stageMovementManualDirection,stageMovementManualDistance)
 
-    # Method for clicking the -X button.
-    # Moves the stage in the negative X direction by specified amount.
-    def buttonClickedXNegative(self):
-        print('-X Clicked')
-        self.systemController.moveTheStage('-X',self.entryBoxMovementDistance.text())
+    # Method for determining which direction to run the profilometer routine
+    def getProfilometerRoutineDirection(self):
+        # If statements that checks which direction radio button is selected.
+        if self.radioButtonX.isChecked():
+            print('X Direction')
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','X')
+        elif self.radioButtonY.isChecked():
+            print('Y Direction')
+            profilometerVariables.setDictionaryVariable('systemControllerProfilometerRoutineDirection','Y')
 
-    # Method for clicking the +Y button.
-    # Moves the stage in the positive Y direction by specified amount.
-    def buttonClickedYPositive(self):
-        print('+Y Clicked')
-        self.systemController.moveTheStage('+Y',self.entryBoxMovementDistance.text())
-
-
-    # Method for clicking the -Y button.
-    # Moves the stage in the negative Y direction by specified amount.
-    def buttonClickedYNegative(self):
-        print('-Y Clicked')
-        self.systemController.moveTheStage('-Y',self.entryBoxMovementDistance.text())
-
-
-    # Method for clicking the +Z button.
-    # Moves the stage in the positve Z direction by specified amount.
-    def buttonClickedZPositive(self):
-        print('+Z Clicked')
-        self.systemController.moveTheStage('+Z',self.entryBoxMovementDistance.text())
-
-    # Method for clicking the -Z button.
-    # Moves the stage in the negative Z direction by specified amount.
-    def buttonClickedZNegative(self):
-        print('-Z Clicked')
-        self.systemController.moveTheStage('-Z',self.entryBoxMovementDistance.text())
 
     # Method for initializing the equipment.
     # Initializes the equipment.
     def initializeEquipment(self):
         print('initializeEquipment accessed')
+        # Creates and starts the systemController on a daemon thread
         self.systemController = profilometerSystemController.systemController()
         self.systemControllerThread = threading.Thread(target=self.systemController.run,args=())
         # Makes the thread a daemon thread so thread exits when main thread exits
