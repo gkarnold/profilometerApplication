@@ -81,6 +81,7 @@ class systemController(threading.Thread):
                 self.stages.moveStages(direction,float(stepSize)/1000)
                 i = i + float(stepSize)/1000
             print('Profilometer Routine Complete')
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         else:
             print('Please select a direction')
             return
