@@ -203,10 +203,12 @@ class Ui_formProfilometer(QtGui.QWidget):
 
     # Method for clicking the start/stop button
     def buttonClickedStartStop(self):
+
         # If statement that cycles through the start/stop functionality of the button
         if profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == True:
             # Update the profilometer routine running to False
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
+            self.updateMovementButtonsState(True)
             print('Profilometer Routine Stopped')
 
         elif profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == False:
@@ -215,11 +217,12 @@ class Ui_formProfilometer(QtGui.QWidget):
             # Updates the profilometer start flag to True
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,True)
             # Updates the profilometer routine direction based on the radio button selected
-            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,self.getProfilometerRoutineDirection())
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,self.retrieveProfilometerRoutineDirection())
             # Updates the profilometer routine step size based on the value entered into the entry box
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize,self.entryBoxStepSize.text())
             # Updates the profilometer routine travel distance based on the value entered into the entry box
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,self.entryBoxTravelDistance.text())
+            self.updateMovementButtonsState(False)
             print('Profilometer Routine Started')
 
     # Method for clicking the save button.
@@ -246,7 +249,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.systemController.moveTheStage(stageMovementManualDirection,stageMovementManualDistance)
 
     # Method for determining which direction to run the profilometer routine
-    def getProfilometerRoutineDirection(self):
+    def retrieveProfilometerRoutineDirection(self):
         # If statements that checks which direction radio button is selected.
         if self.radioButtonX.isChecked():
             print('X Direction')
@@ -254,7 +257,6 @@ class Ui_formProfilometer(QtGui.QWidget):
         elif self.radioButtonY.isChecked():
             print('Y Direction')
             return 'Y'
-
 
     # Method for initializing the equipment.
     # Initializes the equipment.
@@ -266,6 +268,18 @@ class Ui_formProfilometer(QtGui.QWidget):
         # Makes the thread a daemon thread so thread exits when main thread exits
         self.systemControllerThread.daemon = True
         self.systemControllerThread.start()
+
+    # Method for changing the clickability of the manual movement buttons
+    def updateMovementButtonsState(self,condition):
+        self.buttonOrigin.setEnabled(condition)
+        self.buttonCalibrate.setEnabled(condition)
+        self.buttonXPositive.setEnabled(condition)
+        self.buttonXNegative.setEnabled(condition)
+        self.buttonYPositive.setEnabled(condition)
+        self.buttonYNegative.setEnabled(condition)
+        self.buttonZPositive.setEnabled(condition)
+        self.buttonZNegative.setEnabled(condition)
+        self.buttonSave.setEnabled(condition)
 
 def main():
     # Creates the GUI application
