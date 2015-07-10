@@ -28,7 +28,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 # Primary UI class that inherits the QWidget class
-class Ui_Form(QtGui.QWidget):
+class Ui_formProfilometer(QtGui.QWidget):
     def __init__(self):
         # Initializes the QWidget superclass
         QtGui.QWidget.__init__(self)
@@ -206,10 +206,12 @@ class Ui_Form(QtGui.QWidget):
         # If statement hat cycles through the start/stop functionality of the button
         if profilometerVariables.getDictionaryVariable('counter') == 0:
             profilometerVariables.setDictionaryVariable('allowStageMovement',True)
+            profilometerVariables.setDictionaryVariable('systemControllerController',True)
             profilometerVariables.setDictionaryVariable('counter',1)
 
         elif profilometerVariables.getDictionaryVariable('counter') == 1:
             profilometerVariables.setDictionaryVariable('allowStageMovement',False)
+            profilometerVariables.setDictionaryVariable('systemControllerController',False)
             profilometerVariables.setDictionaryVariable('counter',0)
 
         print('Current Thread Count: ' + str(threading.activeCount()))
@@ -225,7 +227,8 @@ class Ui_Form(QtGui.QWidget):
         else:
             print('No Direction Specified')
         print('Start/Stop Clicked')
-        self.systemController.profilometerRoutine(self.direction)
+        print(profilometerVariables.getDictionaryVariable('systemControllerController'))
+        # self.systemController.profilometerRoutine(self.direction)
 
 
     # Method for clicking the save button.
@@ -242,6 +245,8 @@ class Ui_Form(QtGui.QWidget):
     # This allows us to determine if the profilomter is reading correctly.
     def buttonClickedCalibrate(self):
         print('Calibrate Clicked')
+        # self.systemController.initializeData()
+        # self.systemControllerThread.systemController.initializeData()
 
     # Method for clicking the +X button.
     # Moves the stage in the positive X direction by specified amount.
@@ -284,16 +289,18 @@ class Ui_Form(QtGui.QWidget):
     # Method for initializing the equipment.
     # Initializes the equipment.
     def initializeEquipment(self):
-        print('Initialize Equipment clicked')
+        print('initializeEquipment accessed')
         self.systemController = profilometerSystemController.systemController()
-        self.systemController.initializeEquipment()
-        self.systemController.start()
+        self.systemControllerThread = threading.Thread(target=self.systemController.run,args=())
+        # Makes the thread a daemon thread so thread exits when main thread exits
+        self.systemControllerThread.daemon = True
+        self.systemControllerThread.start()
 
 def main():
     # Creates the GUI application
     app = QtGui.QApplication(sys.argv)
     # Creates the class instance defining what to display
-    ex = Ui_Form()
+    ex = Ui_formProfilometer()
     # Shows the class instance
     ex.show()
     # Exits the program when the GUI application is exited

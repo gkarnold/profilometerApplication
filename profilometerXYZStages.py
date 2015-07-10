@@ -1,5 +1,5 @@
 '''
-XYZ Stages that inherit from the stages class
+XYZ Stages that inherit from the stages class.
 '''
 
 # Imports

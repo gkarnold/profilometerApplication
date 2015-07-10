@@ -6,6 +6,7 @@ stages and loading them into the main thread for usage.
 # Imports
 import XPS_Q8_drivers # Control program for the XPS system
 import profilometerEquipment # Imports the equipment file for equipment inheritance
+import time ##### TESTING ONLY
 
 # Stages class for initializing the stages into the program. Inherits the equipment class
 class stages(profilometerEquipment.equipment):
@@ -64,4 +65,8 @@ class stages(profilometerEquipment.equipment):
 
     def moveToOrigin(self):
         print('Stages moved to origin')
+        ### TESTING ONLY
+        for i in range(5):
+            print(i)
+            time.sleep(1)
 

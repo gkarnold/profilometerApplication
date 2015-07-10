@@ -22,8 +22,6 @@ def main():
     # Starting up the UI
     profilometerUI.main()
 
-    systemController.doSomething()
-
 
 
 if __name__ == '__main__':
