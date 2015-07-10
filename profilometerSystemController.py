@@ -74,6 +74,9 @@ class systemController(threading.Thread):
             # While look that starts at 0 and moves the stage by step size until travel distance has been reached
             # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
             while i <= float(travelDistance):
+                if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
+                    print('MID PRINTING STOP')
+                    break
                 self.Agilent34461a.retrieveReading()
                 self.stages.moveStages(direction,float(stepSize))
                 i = i + float(stepSize)

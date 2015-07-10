@@ -15,9 +15,11 @@ class multimeter(profilometerEquipment.equipment):
         return
 
     def retrieveReading(self):
+        print(' ')
         print('Multimeter reading started')
         self.reachEquilibrium()
         print('Multimeter reading finished')
+        print(' ')
 
     def reachEquilibrium(self):
         time.sleep(1.5)
