@@ -296,6 +296,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZPositive.setEnabled(_condition)
         self.buttonZNegative.setEnabled(_condition)
         self.buttonSave.setEnabled(_condition)
+        self.radioButtonY.setEnabled(_condition)
+        self.radioButtonX.setEnabled(_condition)
 
 def main():
     # Creates the GUI application

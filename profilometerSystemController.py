@@ -36,10 +36,10 @@ class systemController(threading.Thread):
             if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
                 self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection,self.systemControllerProfilometerRoutineTravelDirection,self.systemControllerProfilometerRoutineStepSize)
 
-            if not self.systemControllerProfilometerRoutineRunning: # False - profilometer routine is not running
-                time.sleep(.5)
-            elif self.systemControllerProfilometerRoutineRunning: # True - profilometer routine is running
-                time.sleep(2)
+            # if not self.systemControllerProfilometerRoutineRunning: # False - profilometer routine is not running
+            #     time.sleep(.5)
+            # elif self.systemControllerProfilometerRoutineRunning: # True - profilometer routine is running
+            #     time.sleep(2)
 
     # Initializes the equipment
     def initializeEquipment(self):

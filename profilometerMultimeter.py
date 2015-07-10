@@ -22,5 +22,6 @@ class multimeter(profilometerEquipment.equipment):
         print(' ')
 
     def reachEquilibrium(self):
+        print('Please wait for multimeter to reach equilibrium')
         time.sleep(1.5)
         return
