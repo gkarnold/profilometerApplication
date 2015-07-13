@@ -14,7 +14,7 @@ import profilometerSystemController # File containing the System Controller
 
 
 
-def main():
+def profilometerApplication():
     # Initalize the global variables
     profilometerParameters.init()
 
@@ -25,4 +25,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    profilometerApplication()

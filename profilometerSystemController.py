@@ -96,6 +96,7 @@ class systemController(threading.Thread):
             xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
             print(xData)
 
+            # Updates the global parameter for profilometer routine running to false
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         else:
             print('Please select a direction')
