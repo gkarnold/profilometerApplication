@@ -9,6 +9,7 @@ import time
 import profilometerParameters
 import profilometerXYZStages # File containing XYZStages class
 import profilometerAgilent34461a # File containing Agilent 34461a class
+import profilometerDataClass # File containing the data class
 
 # Defines the systemController class
 class systemController(threading.Thread):
@@ -47,7 +48,7 @@ class systemController(threading.Thread):
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
         self.Agilent34461a = profilometerAgilent34461a.agilent34461a()
-        self.stages = profilometerXYZStages.XYZStages()
+        self.substrateStages = profilometerXYZStages.XYZStages()
 
     # Initializes the Data
     def initializeData(self):
@@ -55,15 +56,15 @@ class systemController(threading.Thread):
 
     # Method to move the stages in the specified direction by the specified amount
     def moveTheStage(self,direction,distance):
-        self.stages.moveStages(direction,distance)
+        self.substrateStages.moveStages(direction,distance)
 
     # Method to move the stages to the origin
     def moveStageToOrigin(self):
-        self.stages.moveToOrigin()
+        self.substrateStages.moveToOrigin()
 
     # Method to determine if the profilometer is properly calibrated
     def calibrateProfilometer(self):
-        self.stages.moveStages('+Z',.5)
+        self.substrateStages.moveStages('+Z',.5)
         self.Agilent34461a.retrieveReading()
 
     # Method that runs the profilometer routine
@@ -74,13 +75,27 @@ class systemController(threading.Thread):
             # While look that starts at 0 and moves the stage by step size until travel distance has been reached
             # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
             while i <= float(travelDistance):
+                # Checks to see if the user clicked the stop button mid print and stops the print if so
                 if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                     print('MID PRINTING STOP')
                     break
-                self.Agilent34461a.retrieveReading()
-                self.stages.moveStages(direction,float(stepSize)/1000)
+                # Gets a data reading from the multimeter
+                multimeterData = self.Agilent34461a.retrieveReading()
+                # Gets the current x,y,z stage locations
+                [x,y,z] = self.substrateStages.retrieveStageLocation()
+
+                # Creates an instance of the data class with the current data
+                profilometerDataClass.profilometerData(x,y,z,multimeterData)
+
+                # Moves the stages
+                self.substrateStages.moveStages(direction,float(stepSize)/1000)
+
                 i = i + float(stepSize)/1000
             print('Profilometer Routine Complete')
+
+            xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
+            print(xData)
+
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         else:
             print('Please select a direction')
