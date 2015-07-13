@@ -18,8 +18,10 @@ class multimeter(profilometerEquipment.equipment):
         print(' ')
         print('Multimeter reading started')
         self.reachEquilibrium()
+        multimeterReading = 15 # temp number to test code flow
         print('Multimeter reading finished')
         print(' ')
+        return multimeterReading
 
     def reachEquilibrium(self):
         print('Please wait for multimeter to reach equilibrium')
