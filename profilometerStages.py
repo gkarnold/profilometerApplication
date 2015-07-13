@@ -70,3 +70,8 @@ class stages(profilometerEquipment.equipment):
             print(i)
             time.sleep(1)
 
+    def retrieveStageLocation(self):
+        x = 1
+        y = 2
+        z = 3
+        return x,y,z
