@@ -6,6 +6,7 @@ The system controller handles the data and controls the equipment
 # Imports
 import threading # threading is used for creating multiple threads
 import time
+import visa
 import profilometerParameters
 import profilometerXYZStages # File containing XYZStages class
 import profilometerAgilent34461a # File containing Agilent 34461a class
@@ -36,18 +37,17 @@ class systemController(threading.Thread):
 
             if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
                 self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection,self.systemControllerProfilometerRoutineTravelDirection,self.systemControllerProfilometerRoutineStepSize)
+                # self.profilometerRoutine(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection),profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance),profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize))
 
-            # if not self.systemControllerProfilometerRoutineRunning: # False - profilometer routine is not running
-            #     time.sleep(.5)
-            # elif self.systemControllerProfilometerRoutineRunning: # True - profilometer routine is running
-            #     time.sleep(2)
 
     # Initializes the equipment
     def initializeEquipment(self):
         print('systemController initialized equipment')
+        profilometerParameters.profilometerResourceManager = visa.ResourceManager()
+
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
-        self.Agilent34461a = profilometerAgilent34461a.agilent34461a()
+        self.Agilent34461a = profilometerAgilent34461a.agilent34461aClass()
         self.substrateStages = profilometerXYZStages.XYZStages()
 
     # Initializes the Data
@@ -69,6 +69,8 @@ class systemController(threading.Thread):
 
     # Method that runs the profilometer routine
     def profilometerRoutine(self,direction,travelDistance,stepSize):
+        # Clears the data from any previous runs
+        profilometerParameters.clearDataStorageInstances()
         # If statement that checks to make sure a valid direction has been entered
         if direction == 'X' or direction == 'Y':
             i = 0
@@ -96,7 +98,7 @@ class systemController(threading.Thread):
             xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
             print(xData)
 
-            # Updates the global parameter for profilometer routine running to false
+            # Updates the global parameter for profilometer routine running to false at end of print routine
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         else:
             print('Please select a direction')
@@ -105,6 +107,7 @@ class systemController(threading.Thread):
     def getVariables(self):
         self.systemControllerProfilometerRoutineStart = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
+
         self.systemControllerProfilometerRoutineRunning = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning)
         self.systemControllerProfilometerRoutineDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection)
         self.systemControllerProfilometerRoutineStepSize = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize)
