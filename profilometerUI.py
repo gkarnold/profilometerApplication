@@ -192,8 +192,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.labelProfilometerControls.setText(_translate("formProfilometer", "Profilometer Controls", None))
         self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance(mm):", None))
         self.labelStepSize.setText(_translate("formProfilometer", "Step Size(um):", None))
-        self.entryBoxStepSize.setText(_translate("formProfilometer", "0", None))
-        self.entryBoxTravelDistance.setText(_translate("formProfilometer", "0", None))
+        self.entryBoxStepSize.setText(_translate("formProfilometer", "500", None))
+        self.entryBoxTravelDistance.setText(_translate("formProfilometer", "2", None))
         self.buttonXPositive.setText(_translate("formProfilometer", "+ X", None))
         self.buttonYPositive.setText(_translate("formProfilometer", "+ Y", None))
         self.buttonZPositive.setText(_translate("formProfilometer", "+ Z", None))
@@ -308,6 +308,10 @@ def main():
     ex.show()
     # Exits the program when the GUI application is exited
     sys.exit(app.exec_())
+    sys.exit(exitApp())
+
+def exitApp():
+    print('exit')
 
 if __name__ == '__main__':
     main()
