@@ -11,7 +11,6 @@ from PyQt4 import QtCore, QtGui
 import profilometerParameters
 import profilometerSystemController
 
-
 # Code from the automatic generation from the UI file
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -221,16 +220,21 @@ class Ui_formProfilometer(QtGui.QWidget):
     def buttonClickedStartStop(self):
 
         # If statement that cycles through the start/stop functionality of the button
+        # First if statement that checks for routine running = True
         if profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == True:
-            # Update the profilometer routine running to False
+            # Update the profilometer routine running to False when start/stop button clicked
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
             self.updateMovementButtonsState(True)
+            # Updates the start/stop button to green and start
+            self.buttonStartStop.setText('Start')
+            self.buttonStartStop.setStyleSheet('background-color: green')
             print('Profilometer Routine Stopped')
 
+        # Else if statement that checks for routine running = False
         elif profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning) == False:
-            # Updates the profilometer routine running to True
+            # Updates the profilometer routine running to True when start/stop button clicked
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,True)
-            # Updates the profilometer start flag to True
+            # Updates the profilometer start flag to True when start/stop button clicked
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,True)
             # Updates the profilometer routine direction based on the radio button selected
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,self.retrieveProfilometerRoutineDirection())
@@ -239,6 +243,9 @@ class Ui_formProfilometer(QtGui.QWidget):
             # Updates the profilometer routine travel distance based on the value entered into the entry box
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,self.entryBoxTravelDistance.text())
             self.updateMovementButtonsState(False)
+            # Updates the start/stop button to red and stop
+            self.buttonStartStop.setText('STOP')
+            self.buttonStartStop.setStyleSheet('background-color: red')
             print('Profilometer Routine Started')
 
     # Method for clicking the save button.
@@ -278,15 +285,20 @@ class Ui_formProfilometer(QtGui.QWidget):
     # Initializes the equipment.
     def initializeEquipment(self):
         print('initializeEquipment accessed')
+        # Changes the start/stop button to a green start button
+        self.buttonStartStop.setText('Start')
+        self.buttonStartStop.setStyleSheet('background-color: green')
+
         # Creates and starts the systemController on a daemon thread
         self.systemController = profilometerSystemController.systemController()
         self.systemControllerThread = threading.Thread(target=self.systemController.run,args=())
         # Makes the thread a daemon thread so thread exits when main thread exits
-        # self.systemControllerThread.daemon = True
+        self.systemControllerThread.daemon = True
         self.systemControllerThread.start()
 
     # Method for changing the clickability of the manual movement and save buttons
     def updateMovementButtonsState(self,_condition):
+        # Changes clickability of all buttons except start/stop
         self.buttonOrigin.setEnabled(_condition)
         self.buttonCalibrate.setEnabled(_condition)
         self.buttonXPositive.setEnabled(_condition)
@@ -296,10 +308,16 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZPositive.setEnabled(_condition)
         self.buttonZNegative.setEnabled(_condition)
         self.buttonSave.setEnabled(_condition)
+        # Changes clickability of radio buttons
         self.radioButtonY.setEnabled(_condition)
         self.radioButtonX.setEnabled(_condition)
+        # Changes clickability of all entry boxes
+        self.entryBoxTravelDistance.setEnabled(_condition)
+        self.entryBoxStepSize.setEnabled(_condition)
+        self.entryBoxMovementDistance.setEnabled(_condition)
+        self.entryBoxFileName.setEnabled(_condition)
 
-def main():
+def profilometerUIMain():
     # Creates the GUI application
     app = QtGui.QApplication(sys.argv)
     # Creates the class instance defining what to display
@@ -310,4 +328,4 @@ def main():
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    main()
+    profilometerUIMain()

@@ -25,13 +25,15 @@ class systemController(threading.Thread):
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,'0')
 
     def run(self):
+
+
         print('systemController run')
         self.initializeEquipment()
         self.initializeData()
         self.getVariables()
-
         print('Starting controller while loop')
-        while True:
+        # while True:
+        while (True):
             self.getVariables()
 
             if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
