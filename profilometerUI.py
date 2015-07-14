@@ -282,7 +282,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.systemController = profilometerSystemController.systemController()
         self.systemControllerThread = threading.Thread(target=self.systemController.run,args=())
         # Makes the thread a daemon thread so thread exits when main thread exits
-        self.systemControllerThread.daemon = True
+        # self.systemControllerThread.daemon = True
         self.systemControllerThread.start()
 
     # Method for changing the clickability of the manual movement and save buttons
@@ -308,10 +308,6 @@ def main():
     ex.show()
     # Exits the program when the GUI application is exited
     sys.exit(app.exec_())
-    sys.exit(exitApp())
-
-def exitApp():
-    print('exit')
 
 if __name__ == '__main__':
     main()
