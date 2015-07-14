@@ -20,7 +20,7 @@ def profilometerApplication():
 
 
     # Starting up the UI
-    profilometerUI.main()
+    profilometerUI.profilometerUIMain()
 
 
 

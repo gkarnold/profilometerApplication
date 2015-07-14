@@ -17,7 +17,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
 
 
     def retrieveReading(self):
-        print('started reading')
+        print('Started reading Agilent 34461a Multimeter')
         # Sets a sample size
         multimeterReadingsSampleSize = 10
         # Sets a varaible that will hold the total value of all multimeter readings for finding the average
