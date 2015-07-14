@@ -6,6 +6,10 @@ communication between the different threads.
 # Initializes the global paramters
 def init():
     global globalParameters
+    global Agilent34461a
+    global profilometerResourceManager
+    profilometerResourceManager = None
+    agilent34461a = None
     globalParameters = {}
 
 # Variables holding the keys for the profilometer's system controller
