@@ -1,10 +1,7 @@
-'''
-XYZ Stages that inherit from the stages class.
-'''
-
-# Imports
-import profilometerStages # Imports the stages file for stage inheritance
+import profilometerStages
 import XPS_Q8_drivers
+import threading
+import time
 
 class XYZStages(profilometerStages.stages):
 
@@ -20,34 +17,27 @@ class XYZStages(profilometerStages.stages):
         self._positionerXYY = None
         self._positionerZPos = None
 
+        self.XYZStagesInitialize()
+
         return
+
+    def run(self):
+        self.XYZStagesInitialize()
+
+        # print('Move in X')
+        # self.moveStageAbsolute(self._positionerXYX,[0])
+        # print('Move in X')
+        # self.moveStageAbsolute(self._positionerXYX,[15])
 
     def XYZStagesInitialize(self):
         print('XYZStagesInitialize')
-
-        # Checks for potential errors connecting to the XPS System (Code from XPS manufacture)
-        def displayErrorAndClose (socketId, errorCode, APIName):
-			if (errorCode != -2) and (errorCode != -108):
-				[errorCode2, errorString] = myxps.ErrorStringGet(socketId, errorCode)
-				if (errorCode2 != 0):
-					print (APIName + ': ERROR ' + str(errorCode))
-				else:
-					print (APIName + ': ' + errorString)
-			else:
-				if (errorCode == -2):
-					print (APIName + ': TCP timeout')
-				if (errorCode == -108):
-					print (APIName + ': The TCP/IP connection was closed by an administrator')
-			myxps.TCP_CloseSocket(socketId)
-			return
-
         # Creates an instance of the XPS system
         self._XPSSystem = XPS_Q8_drivers.XPS()
-
+        
         # Gets the socketIDs for the created system
-        # SocketID1 is for initiating stage movements
+        # SocketID1 is for initiating movements
         self._socketID1 = self._XPSSystem.TCP_ConnectToServer('192.168.0.254',5001,20) # Returns -1 if connection error occurs
-        # SocketID2 is for interrupting stage movements
+        # SocketID2 is for interrupting movements
         self._socketID2 = self._XPSSystem.TCP_ConnectToServer('192.168.0.254',5001,21) # Returns -1 if connection error occurs
 
         # If statements to check to make sure that both sockets were created correctly
@@ -63,24 +53,34 @@ class XYZStages(profilometerStages.stages):
         self._positionerXYY = self._macroGroup + '.Y'
         self._positionerZPos = self._macroGroup + '.Z'
 
-    # Method for moving the stages to an aboslute position
     def moveStageAbsolute(self,direction,location):
         self._XPSSystem.GroupMoveAbsolute(self._socketID1,direction,location)
 
-    # Method for moving the stages a relative distance
     def moveStageRelative(self,direction,distance):
-        self._XPSSystem.GroupMoveRelative(self._socketID1,direction,distance)
+        self._XPSSystem.GroupMoveRelative(self._socketID1,direction)
+        pass
 
-    # Method for aborting stage movement. Aborts all directions.
     def moveStageAbort(self):
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYX)
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYY)
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerZPos)
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._macroGroup)
 
-    # Gets the current location of the stage
-    def retrieveStagePostion(self):
-        stagePositionX = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerXYX,1)
-        stagePositionY = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerXYY,1)
-        stagePositionZ = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerZPos,1)
-        return stagePositionX, stagePositionY, stagePositionZ
+def main():
+    # Creates a stages instance
+    createdStages1 = XYZStages()
+    createdStages2 = XYZStages()
+    # Create a thread for the stages instance
+    createdStages1Thread = threading.Thread(target=createdStages1.moveStageAbsolute,args=(createdStages1._positionerXYX,[0]))
+    createdStages1Thread.start()
+
+    print(threading.activeCount())
+    time.sleep(3)
+    createdStages2
+    createdStages2.moveStageAbort()
+
+
+    print(threading.activeCount())
+
+if __name__ == '__main__':
+    main()

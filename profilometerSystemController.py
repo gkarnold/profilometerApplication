@@ -38,7 +38,7 @@ class systemController(threading.Thread):
 
             if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
                 # self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection,self.systemControllerProfilometerRoutineTravelDirection,self.systemControllerProfilometerRoutineStepSize)
-                self.profilometerRoutine(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection),profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance),profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize))
+                self.profilometerRoutine(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection), profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance), profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize))
 
 
     # Initializes the equipment
@@ -85,7 +85,7 @@ class systemController(threading.Thread):
                 # Gets a data reading from the multimeter
                 multimeterData = self.Agilent34461a.retrieveReading()
                 # Gets the current x,y,z stage locations
-                [x,y,z] = self.substrateStages.retrieveStageLocation()
+                [x,y,z] = self.substrateStages.retrieveStagePostion()
 
                 # Creates an instance of the data class with the current data
                 profilometerDataClass.profilometerData(x,y,z,multimeterData)

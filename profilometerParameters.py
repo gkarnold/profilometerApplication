@@ -6,11 +6,13 @@ communication between the different threads.
 # Initializes the global paramters
 def init():
     global globalParameters
-    global Agilent34461a
-    global profilometerResourceManager
-    profilometerResourceManager = None
-    agilent34461a = None
+    # global Agilent34461a
+    # global profilometerResourceManager
+
     globalParameters = {}
+    agilent34461a = None
+    profilometerResourceManager = None
+
 
 # Variables holding the keys for the profilometer's system controller
 kHNSystemControllerProfilometer_routineRunning = 'kHNSystemControllerProfilometer_routineRunning'
@@ -21,6 +23,8 @@ kHNSystemControllerProfilometer_routineTravelDistance = 'kHNSystemControllerProf
 
 # Data Storage instance ID list
 _kHNSystemControllerProfilometer_dataStorageInstances = []
+
+
 
 # Function to update a dictionary parameter
 def updateDictionaryParameter(key,value):
