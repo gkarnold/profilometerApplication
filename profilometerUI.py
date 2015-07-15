@@ -257,6 +257,7 @@ class Ui_formProfilometer(QtGui.QWidget):
     # This takes the profilometer to the origin.
     def buttonClickedOrigin(self):
         print('Origin Clicked')
+        self.systemController.moveStageToOrigin()
 
     # Method for clicking the calibrate button.
     # This allows us to determine if the profilomter is reading correctly.

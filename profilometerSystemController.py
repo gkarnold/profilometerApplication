@@ -60,6 +60,7 @@ class systemController(threading.Thread):
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
         self.Agilent34461a = profilometerAgilent34461a.agilent34461aClass()
         self.substrateStages = profilometerXYZStages.XYZStages()
+        self.substrateStages.XYZStagesInitialize()
 
     # Initializes the Data
     def initializeData(self):
@@ -81,7 +82,7 @@ class systemController(threading.Thread):
 
     # Method to move the stages to the origin
     def moveStageToOrigin(self):
-        self.substrateStages.moveToOrigin()
+        self.substrateStages.moveStageAbsolute()
 
     # Method to determine if the profilometer is properly calibrated
     def calibrateProfilometer(self):
