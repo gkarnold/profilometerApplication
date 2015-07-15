@@ -12,9 +12,10 @@ class multimeter(profilometerEquipment.equipment):
     def __init__(self):
         profilometerEquipment.equipment.__init__(self) # Initializes the equipment superclass
         print('Multimeter Initialized')
+        self.equilibriumTime = 1.5
         return
 
-    def retrieveReading(self):
+    def retrieveVoltage(self):
         print(' ')
         print('Multimeter reading started')
         self.reachEquilibrium()
@@ -25,5 +26,5 @@ class multimeter(profilometerEquipment.equipment):
 
     def reachEquilibrium(self):
         print('Please wait for multimeter to reach equilibrium')
-        time.sleep(1.5)
+        time.sleep(self.equilibriumTime)
         return
