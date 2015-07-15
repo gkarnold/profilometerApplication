@@ -209,12 +209,12 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonOrigin.clicked.connect(self.buttonClickedOrigin)
         self.buttonCalibrate.clicked.connect(self.buttonClickedCalibrate)
         # Manual stage movement clicked commands
-        self.buttonXPositive.clicked.connect(lambda: self.buttonClickedManualMove('+X',self.entryBoxMovementDistance.text()))
-        self.buttonXNegative.clicked.connect(lambda: self.buttonClickedManualMove('-X',self.entryBoxMovementDistance.text()))
-        self.buttonYPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Y',self.entryBoxMovementDistance.text()))
-        self.buttonYNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Y',self.entryBoxMovementDistance.text()))
-        self.buttonZPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Z',self.entryBoxMovementDistance.text()))
-        self.buttonZNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Z',self.entryBoxMovementDistance.text()))
+        self.buttonXPositive.clicked.connect(lambda: self.buttonClickedManualMove('+X',float(self.entryBoxMovementDistance.text())))
+        self.buttonXNegative.clicked.connect(lambda: self.buttonClickedManualMove('-X',float(self.entryBoxMovementDistance.text())))
+        self.buttonYPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Y',float(self.entryBoxMovementDistance.text())))
+        self.buttonYNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Y',float(self.entryBoxMovementDistance.text())))
+        self.buttonZPositive.clicked.connect(lambda: self.buttonClickedManualMove('+Z',float(self.entryBoxMovementDistance.text())))
+        self.buttonZNegative.clicked.connect(lambda: self.buttonClickedManualMove('-Z',float(self.entryBoxMovementDistance.text())))
 
     # Method for clicking the start/stop button
     def buttonClickedStartStop(self):
@@ -263,8 +263,7 @@ class Ui_formProfilometer(QtGui.QWidget):
     # This allows us to determine if the profilomter is reading correctly.
     def buttonClickedCalibrate(self):
         print('Calibrate Clicked')
-        # self.systemController.initializeData()
-        # self.systemControllerThread.systemController.initializeData()
+        self.systemController.calibrateProfilometer()
 
     # Method for clicking the manual movement buttons.
     # Moves the stage in the specified direction direction by specified amount.
@@ -276,10 +275,8 @@ class Ui_formProfilometer(QtGui.QWidget):
     def retrieveProfilometerRoutineDirection(self):
         # If statements that checks which direction radio button is selected.
         if self.radioButtonX.isChecked():
-            print('X Direction')
             return 'X'
         elif self.radioButtonY.isChecked():
-            print('Y Direction')
             return 'Y'
 
     # Method for initializing the equipment.
