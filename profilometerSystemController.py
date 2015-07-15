@@ -17,15 +17,15 @@ class systemController(threading.Thread):
     # Initializes the systemController class
     def __init__(self):
         threading.Thread.__init__(self)
-        print('systemController initialized')
+        # Dictionary of multipliers based on the movement direction. This flips the sign of the number the user enters
+        # when they click a negative manual movement button.
         self._directionDictionary = {
-            '+X': [1],
-            '-X': [-1],
-            '+Y': [1],
-            '-Y': [-1],
-            '+Z': [1],
-            '-Z': [-1],
-
+            '+X': 1,
+            '-X': -1,
+            '+Y': 1,
+            '-Y': -1,
+            '+Z': 1,
+            '-Z': -1,
         }
 
         # TEMP VARIABLE INITIALIZATION #
@@ -34,14 +34,9 @@ class systemController(threading.Thread):
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,'0')
 
     def run(self):
-
-
-        print('systemController run')
         self.initializeEquipment()
         self.initializeData()
         self.getVariables()
-        print('Starting controller while loop')
-        # while True:
         while (True):
             # self.getVariables()
 
@@ -53,7 +48,6 @@ class systemController(threading.Thread):
 
     # Initializes the equipment
     def initializeEquipment(self):
-        print('systemController initialized equipment')
         profilometerParameters.profilometerResourceManager = visa.ResourceManager()
 
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
@@ -64,19 +58,19 @@ class systemController(threading.Thread):
 
     # Initializes the Data
     def initializeData(self):
-        print('systemController initialized data')
+        pass
 
     # Method to move the stages in the specified direction by the specified amount
     def moveTheStage(self,direction,distance):
         # Checks the direction and multiplies by a -1 if negative or a 1 is positive
-        distance = distance * self._directionDictionary[direction]
+        distance = distance * int(self._directionDictionary[direction])
 
         if direction == '-X' or direction == '+X':
-            direction = self.substrateStages.positionerXYX
+            direction = self.substrateStages.positioner_X
         elif direction == '-Y' or direction == '+Y':
-            direction = self.substrateStages.positionerXYY
+            direction = self.substrateStages.positioner_Y
         elif direction == '-Z' or direction == '+Z':
-            direction = self.substrateStages.positionerZPos
+            direction = self.substrateStages.positioner_Z
 
         self.substrateStages.moveStageRelative(direction,[distance])
 
@@ -85,37 +79,48 @@ class systemController(threading.Thread):
         self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[0,0,0])
 
     # Method to determine if the profilometer is properly calibrated
+    # Moves stage by 0.5 mm in Z and checks to see how much the omron sensor thinks the stage moved
     def calibrateProfilometer(self):
-        self.substrateStages.moveStages('+Z',.5)
-        self.Agilent34461a.retrieveVoltage()
+        # Temporary Usage: Get current location
+        [stageX, stageY, stageZ] = self.substrateStages.retrieveStagePostion()
+        print('Stage Position (x,y,z): ({},{},{})'.format(stageX,stageY,stageZ))
 
     # Method that runs the profilometer routine
-    def profilometerRoutine(self,direction,travelDistance,stepSize):
+    def profilometerRoutine(self, direction, travelDistance, stepSize):
+        # Converts the travel distance and step size to a float
+        travelDistance = float(travelDistance)
+        stepSize = float(stepSize)
+
+        # Changes profilometer start to false so that the routine only runs once
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
 
         # Clears the data from any previous runs
         profilometerParameters.clearDataStorageInstances()
 
         # Creates an instance of the stages
         _stagesInstance = profilometerXYZStages.XYZStages()
+        _stagesInstance.XYZStagesInitialize()
 
         # If statement that checks to make sure a valid direction has been entered and changes direction to
         # a value recognized by the stages class
         if direction == 'X':
-            _movementDirection = _stagesInstance.positionerXYX
+            _movementDirection = _stagesInstance.positioner_X
 
         elif direction == 'Y':
-            _movementDirection = _stagesInstance.positionerXYY
+            _movementDirection = _stagesInstance.positioner_Y
 
         else:
             print('Please select a direction')
             return
 
+        # If statement that checks the sign of the travel distance
+        if travelDistance < 0:
+            stepSize = -stepSize
 
         i = 0
         # While loop that starts at 0 and moves the stage by step size until travel distance has been reached
         # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
-        while i <= float(travelDistance):
-
+        while i <= abs(float(travelDistance)):
             # Checks to see if the user clicked the stop button mid print and stops the print if so
             if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                 _stagesInstance.moveStageAbort()
@@ -131,10 +136,12 @@ class systemController(threading.Thread):
             profilometerDataClass.profilometerData(x,y,z,multimeterData)
 
             # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
-            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[float(stepSize)/1000])
+            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[stepSize/1000]))
+            _stagesInstanceThread.start()
 
             # For loop that runs during the stage movement and aborts the movement if the user clicks the stop button
             motionStatus = _stagesInstance.checkMotionStatus()
+
             while (motionStatus != 0):
                 motionStatus = _stagesInstance.checkMotionStatus()
                 # Checks to see if the user has clicked the stop button and aborts the stage movement if they have
@@ -142,10 +149,10 @@ class systemController(threading.Thread):
                     _stagesInstance.moveStageAbort()
                     print('MID PRINTING STOP')
                     break
-                print('Movement Done')
 
             # Increases i by the step size for the next iteration
-            i = i + float(stepSize)/1000
+            i = i + abs(stepSize)/1000
+
         print('Profilometer Routine Complete')
 
         # Updates the global parameter for profilometer routine running to false at end of print routine
