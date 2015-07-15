@@ -18,6 +18,15 @@ class systemController(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         print('systemController initialized')
+        self._directionDictionary = {
+            '+X': [1],
+            '-X': [-1],
+            '+Y': [1],
+            '-Y': [-1],
+            '+Z': [1],
+            '-Z': [-1],
+
+        }
 
         # TEMP VARIABLE INITIALIZATION #
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection,'X')
@@ -58,7 +67,17 @@ class systemController(threading.Thread):
 
     # Method to move the stages in the specified direction by the specified amount
     def moveTheStage(self,direction,distance):
-        self.substrateStages.moveStages(direction,distance)
+        # Checks the direction and multiplies by a -1 if negative or a 1 is positive
+        distance = distance * self._directionDictionary[direction]
+
+        if direction == '-X' or direction == '+X':
+            direction = self.substrateStages.positionerXYX
+        elif direction == '-Y' or direction == '+Y':
+            direction = self.substrateStages.positionerXYY
+        elif direction == '-Z' or direction == '+Z':
+            direction = self.substrateStages.positionerZPos
+
+        self.substrateStages.moveStageRelative(direction,[distance])
 
     # Method to move the stages to the origin
     def moveStageToOrigin(self):
@@ -111,10 +130,11 @@ class systemController(threading.Thread):
             profilometerDataClass.profilometerData(x,y,z,multimeterData)
 
             # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
-            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,float(stepSize)/1000))
+            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[float(stepSize)/1000)])
 
             # While loop that runs during the stage movement and aborts the movement if the user clicks the stop button
             while _stagesInstance.checkMotionStatus() != 0:
+                # Checks to see if the user has clicked the stop button and aborts the stage movement if they have
                 if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                     _stagesInstance.moveStageAbort()
                     print('MID PRINTING STOP')
