@@ -11,7 +11,6 @@ class multimeter(profilometerEquipment.equipment):
 
     def __init__(self):
         profilometerEquipment.equipment.__init__(self) # Initializes the equipment superclass
-        print('Multimeter Initialized')
         self.equilibriumTime = 1.5
         return
 

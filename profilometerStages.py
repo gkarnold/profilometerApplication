@@ -14,5 +14,4 @@ class stages(profilometerEquipment.equipment):
 
     def __init__(self):
         profilometerEquipment.equipment.__init__(self)
-        print('Stages Initialized')
         return

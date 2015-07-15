@@ -13,11 +13,9 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
     def __init__(self):
         profilometerParameters.agilent34461a = profilometerParameters.profilometerResourceManager.open_resource('USB0::0x0957::0x1A07::MY53205040::INSTR')
         profilometerMultimeter.multimeter.__init__(self)
-        print('agilent34461a intialized')
 
 
     def retrieveVoltage(self):
-        print('Started reading Agilent 34461a Multimeter')
         # Sets a sample size
         multimeterReadingsSampleSize = 10
         # Sets a varaible that will hold the total value of all multimeter readings for finding the average
