@@ -58,7 +58,7 @@ class XYZStages(profilometerStages.stages):
 
     def moveStageRelative(self,direction,distance):
         self._XPSSystem.GroupMoveRelative(self._socketID1,direction)
-        pass
+
 
     def moveStageAbort(self):
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYX)
