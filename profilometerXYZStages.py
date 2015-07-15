@@ -15,13 +15,14 @@ class XYZStages(profilometerStages.stages):
         self._XPSSystem = XPS_Q8_drivers.XPS()
         self._socketID1 = None
         self._socketID2 = None
-        self._macroGroup = None
-        self._positionerXYX = None
-        self._positionerXYY = None
-        self._positionerZPos = None
+        self.macroGroup = None
+        self.positionerXYX = None
+        self.positionerXYY = None
+        self.positionerZPos = None
 
         return
 
+# What function does
     def XYZStagesInitialize(self):
         print('XYZStagesInitialize')
 
@@ -58,29 +59,47 @@ class XYZStages(profilometerStages.stages):
             print('Connection to XPS failed, check IP and Port. SocketID2')
             sys.exit()
         # Sets up the macro group and the positioners
-        self._macroGroup = 'XYZ'
-        self._positionerXYX = self._macroGroup + '.X'
-        self._positionerXYY = self._macroGroup + '.Y'
-        self._positionerZPos = self._macroGroup + '.Z'
+        self.macroGroup = 'XYZ'
+        self.positionerXYX = self.macroGroup + '.X'
+        self.positionerXYY = self.macroGroup + '.Y'
+        self.positionerZPos = self.macroGroup + '.Z'
 
     # Method for moving the stages to an aboslute position
-    def moveStageAbsolute(self,direction,location):
+    def moveStageAbsolute(self, direction, location):
         self._XPSSystem.GroupMoveAbsolute(self._socketID1,direction,location)
 
     # Method for moving the stages a relative distance
-    def moveStageRelative(self,direction,distance):
+    def moveStageRelative(self, direction, distance):
         self._XPSSystem.GroupMoveRelative(self._socketID1,direction,distance)
 
     # Method for aborting stage movement. Aborts all directions.
     def moveStageAbort(self):
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYX)
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYY)
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerZPos)
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._macroGroup)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerXYX)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerXYY)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerZPos)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.macroGroup)
 
     # Gets the current location of the stage
     def retrieveStagePostion(self):
-        stagePositionX = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerXYX,1)
-        stagePositionY = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerXYY,1)
-        stagePositionZ = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positionerZPos,1)
-        return stagePositionX, stagePositionY, stagePositionZ
+
+        ### LOOK into doing a single call on macroGroup and seeing what the returned results look like.
+        # Might be able to simplify this down into a single line of code.
+
+        # Gets the current location of each axis of the stage
+        [_stagePositionXError, _stagePositionX] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerXYX,1)
+        [_stagePositionYError, _stagePositionY] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerXYY,1)
+        [_stagePositionZError, _stagePositionZ] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerZPos,1)
+
+        # Retruns the locations
+        return _stagePositionX, _stagePositionY, _stagePositionZ
+
+    def checkMotionStatus(self):
+        # Gets the current motion status of each positioner
+        [_stageMotionStatusXError, _stageMotionStatusX] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
+        [_stageMotionStatusYError, _stageMotionStatusY] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
+        [_stageMotionStatusZError, _stageMotionStatusZ] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
+        [_stageMotionStatusError, _stageMotionStatus] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.macroGroup,1)
+        if _stageMotionStatusX == 0 and _stageMotionStatusY == 0 and _stageMotionStatusZ == 0:
+            return 0
+        else:
+            return 1
