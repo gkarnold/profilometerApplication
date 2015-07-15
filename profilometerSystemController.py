@@ -82,7 +82,7 @@ class systemController(threading.Thread):
 
     # Method to move the stages to the origin
     def moveStageToOrigin(self):
-        self.substrateStages.moveStageAbsolute()
+        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[0,0,0])
 
     # Method to determine if the profilometer is properly calibrated
     def calibrateProfilometer(self):
@@ -131,10 +131,12 @@ class systemController(threading.Thread):
             profilometerDataClass.profilometerData(x,y,z,multimeterData)
 
             # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
-            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[float(stepSize)/1000)])
+            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[float(stepSize)/1000])
 
-            # While loop that runs during the stage movement and aborts the movement if the user clicks the stop button
-            while _stagesInstance.checkMotionStatus() != 0:
+            # For loop that runs during the stage movement and aborts the movement if the user clicks the stop button
+            motionStatus = _stagesInstance.checkMotionStatus()
+            while (motionStatus != 0):
+                motionStatus = _stagesInstance.checkMotionStatus()
                 # Checks to see if the user has clicked the stop button and aborts the stage movement if they have
                 if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                     _stagesInstance.moveStageAbort()
