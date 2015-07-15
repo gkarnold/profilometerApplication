@@ -13,9 +13,9 @@ class XYZStages(profilometerStages.stages):
         self._socketID1 = None
         self._socketID2 = None
         self._macroGroup = None
-        self._positionerXYX = None
-        self._positionerXYY = None
-        self._positionerZPos = None
+        self._positioner_X = None
+        self._positioner_Y = None
+        self._positioner_Z = None
 
         self.XYZStagesInitialize()
 
@@ -49,24 +49,32 @@ class XYZStages(profilometerStages.stages):
             sys.exit()
         # Sets up the macro group and the positioners
         self._macroGroup = 'XYZ'
-        self._positionerXYX = self._macroGroup + '.X'
-        self._positionerXYY = self._macroGroup + '.Y'
-        self._positionerZPos = self._macroGroup + '.Z'
+        self._positioner_X = self._macroGroup + '.X'
+        self._positioner_Y = self._macroGroup + '.Y'
+        self._positioner_Z = self._macroGroup + '.Z'
 
     def moveStageAbsolute(self,direction,location):
         self._XPSSystem.GroupMoveAbsolute(self._socketID1,direction,location)
 
     def moveStageRelative(self,direction,distance):
-        self._XPSSystem.GroupMoveRelative(self._socketID1,direction)
+        print(distance)
+        self._XPSSystem.GroupMoveRelative(self._socketID1,direction,distance)
 
 
     def moveStageAbort(self):
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYX)
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerXYY)
-        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positionerZPos)
+        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positioner_X)
+        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positioner_Y)
+        self._XPSSystem.GroupMoveAbort(self._socketID2,self._positioner_Z)
         self._XPSSystem.GroupMoveAbort(self._socketID2,self._macroGroup)
 
+    def retrieveStagePosition(self):
+        [XError,X] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positioner_X,1)
+        [YError,Y] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positioner_Y,1)
+        [ZError,Z] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self._positioner_Z,1)
+        return X,Y,Z
+
 def main():
+    '''
     # Creates a stages instance
     createdStages1 = XYZStages()
     createdStages2 = XYZStages()
@@ -78,9 +86,12 @@ def main():
     time.sleep(3)
     createdStages2
     createdStages2.moveStageAbort()
+    '''
 
+    createdStages3 = XYZStages()
+    [x,y,z] = createdStages3.retrieveStagePosition()
+    print('Location: ({},{},{})'.format(x,y,z))
 
-    print(threading.activeCount())
 
 if __name__ == '__main__':
     main()
