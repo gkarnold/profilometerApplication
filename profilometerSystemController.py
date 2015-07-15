@@ -34,9 +34,10 @@ class systemController(threading.Thread):
         print('Starting controller while loop')
         # while True:
         while (True):
-            self.getVariables()
+            # self.getVariables()
 
-            if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine
+            # if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine # Commented out to see if we can skip getVaraibles
+            if profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart): # True - start profilometer routine
                 # self.profilometerRoutine(self.systemControllerProfilometerRoutineDirection,self.systemControllerProfilometerRoutineTravelDirection,self.systemControllerProfilometerRoutineStepSize)
                 self.profilometerRoutine(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection), profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance), profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize))
 
@@ -66,45 +67,69 @@ class systemController(threading.Thread):
     # Method to determine if the profilometer is properly calibrated
     def calibrateProfilometer(self):
         self.substrateStages.moveStages('+Z',.5)
-        self.Agilent34461a.retrieveReading()
+        self.Agilent34461a.retrieveVoltage()
 
     # Method that runs the profilometer routine
     def profilometerRoutine(self,direction,travelDistance,stepSize):
+
         # Clears the data from any previous runs
         profilometerParameters.clearDataStorageInstances()
-        # If statement that checks to make sure a valid direction has been entered
-        if direction == 'X' or direction == 'Y':
-            i = 0
-            # While look that starts at 0 and moves the stage by step size until travel distance has been reached
-            # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
-            while i <= float(travelDistance):
-                # Checks to see if the user clicked the stop button mid print and stops the print if so
-                if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
-                    print('MID PRINTING STOP')
-                    break
-                # Gets a data reading from the multimeter
-                multimeterData = self.Agilent34461a.retrieveReading()
-                # Gets the current x,y,z stage locations
-                [x,y,z] = self.substrateStages.retrieveStagePostion()
 
-                # Creates an instance of the data class with the current data
-                profilometerDataClass.profilometerData(x,y,z,multimeterData)
+        # Creates an instance of the stages
+        _stagesInstance = profilometerXYZStages.XYZStages()
 
-                # Moves the stages
-                self.substrateStages.moveStages(direction,float(stepSize)/1000)
+        # If statement that checks to make sure a valid direction has been entered and changes direction to
+        # a value recognized by the stages class
+        if direction == 'X':
+            _movementDirection = _stagesInstance.positionerXYX
 
-                i = i + float(stepSize)/1000
-            print('Profilometer Routine Complete')
+        elif direction == 'Y':
+            _movementDirection = _stagesInstance.positionerXYY
 
-            xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
-            print(xData)
-
-            # Updates the global parameter for profilometer routine running to false at end of print routine
-            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
         else:
             print('Please select a direction')
             return
 
+
+        i = 0
+        # While loop that starts at 0 and moves the stage by step size until travel distance has been reached
+        # Flow is: Scan > Move > Iterate - This allows us to scan the first and last points
+        while i <= float(travelDistance):
+
+            # Checks to see if the user clicked the stop button mid print and stops the print if so
+            if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
+                _stagesInstance.moveStageAbort()
+                print('MID PRINTING STOP')
+                break
+
+            # Gets a data reading from the multimeter
+            multimeterData = self.Agilent34461a.retrieveVoltage()
+            # Gets the current x,y,z stage locations
+            [x,y,z] = _stagesInstance.retrieveStagePostion()
+
+            # Creates an instance of the data class with the current data
+            profilometerDataClass.profilometerData(x,y,z,multimeterData)
+
+            # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
+            _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,float(stepSize)/1000))
+
+            # While loop that runs during the stage movement and aborts the movement if the user clicks the stop button
+            while _stagesInstance.checkMotionStatus() != 0:
+                if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
+                    _stagesInstance.moveStageAbort()
+                    print('MID PRINTING STOP')
+                    break
+                print('Movement Done')
+
+            # Increases i by the step size for the next iteration
+            i = i + float(stepSize)/1000
+        print('Profilometer Routine Complete')
+
+        # Updates the global parameter for profilometer routine running to false at end of print routine
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
+
+
+    # Method to update the instance variables
     def getVariables(self):
         self.systemControllerProfilometerRoutineStart = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
