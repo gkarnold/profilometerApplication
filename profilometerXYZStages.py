@@ -10,22 +10,20 @@ class XYZStages(profilometerStages.stages):
 
     def __init__(self):
         profilometerStages.stages.__init__(self)
-        print('XYZStages Initialized')
         # Instance variables that will be defined during the stages initialization in below method
         self._XPSSystem = XPS_Q8_drivers.XPS()
         self._socketID1 = None
         self._socketID2 = None
         self.macroGroup = None
-        self.positionerXYX = None
-        self.positionerXYY = None
-        self.positionerZPos = None
+        self.positioner_X = None
+        self.positioner_Y = None
+        self.positioner_Z = None
+        self.stageVelocity = 1.0
 
         return
 
 # What function does
     def XYZStagesInitialize(self):
-        print('XYZStagesInitialize')
-
         # Checks for potential errors connecting to the XPS System (Code from XPS manufacture)
         def displayErrorAndClose (socketId, errorCode, APIName):
 			if (errorCode != -2) and (errorCode != -108):
@@ -58,11 +56,24 @@ class XYZStages(profilometerStages.stages):
         if (self._socketID2 == -1):
             print('Connection to XPS failed, check IP and Port. SocketID2')
             sys.exit()
+
         # Sets up the macro group and the positioners
         self.macroGroup = 'XYZ'
-        self.positionerXYX = self.macroGroup + '.X'
-        self.positionerXYY = self.macroGroup + '.Y'
-        self.positionerZPos = self.macroGroup + '.Z'
+        self.positioner_X = self.macroGroup + '.X'
+        self.positioner_Y = self.macroGroup + '.Y'
+        self.positioner_Z = self.macroGroup + '.Z'
+
+        # Retrieves the velocity, acceleration and jerk information from the XPS System
+        [stage_X_parameterError, stage_X_velocty, stage_X_acceleration, stage_X_minJerkTime, stage_X_maxJerkTime] = self._XPSSystem.PositionerSGammaParametersGet(self._socketID1,self.positioner_X)
+        [stage_Y_parameterError, stage_Y_velocty, stage_Y_acceleration, stage_Y_minJerkTime, stage_Y_maxJerkTime] = self._XPSSystem.PositionerSGammaParametersGet(self._socketID1,self.positioner_Y)
+        [stage_Z_parameterError, stage_Z_velocty, stage_Z_acceleration, stage_Z_minJerkTime, stage_Z_maxJerkTime] = self._XPSSystem.PositionerSGammaParametersGet(self._socketID1,self.positioner_Z)
+
+        # Updates the velocty, acceleration and jerk parameters for the XPS system
+        self._XPSSystem.PositionerSGammaParametersSet(self._socketID1, self.positioner_X, self.stageVelocity, stage_X_acceleration, stage_X_minJerkTime, stage_X_maxJerkTime)
+        self._XPSSystem.PositionerSGammaParametersSet(self._socketID1, self.positioner_Y, self.stageVelocity, stage_Y_acceleration, stage_Y_minJerkTime, stage_Y_maxJerkTime)
+        self._XPSSystem.PositionerSGammaParametersSet(self._socketID1, self.positioner_Z, self.stageVelocity, stage_Z_acceleration, stage_Z_minJerkTime, stage_Z_maxJerkTime)
+
+
 
     # Method for moving the stages to an aboslute position
     def moveStageAbsolute(self, direction, location):
@@ -74,30 +85,26 @@ class XYZStages(profilometerStages.stages):
 
     # Method for aborting stage movement. Aborts all directions.
     def moveStageAbort(self):
-        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerXYX)
-        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerXYY)
-        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positionerZPos)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positioner_X)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positioner_Y)
+        self._XPSSystem.GroupMoveAbort(self._socketID2, self.positioner_Z)
         self._XPSSystem.GroupMoveAbort(self._socketID2, self.macroGroup)
 
     # Gets the current location of the stage
     def retrieveStagePostion(self):
-
-        ### LOOK into doing a single call on macroGroup and seeing what the returned results look like.
-        # Might be able to simplify this down into a single line of code.
-
         # Gets the current location of each axis of the stage
-        [_stagePositionXError, _stagePositionX] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerXYX,1)
-        [_stagePositionYError, _stagePositionY] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerXYY,1)
-        [_stagePositionZError, _stagePositionZ] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positionerZPos,1)
+        [_stagePositionXError, _stagePositionX] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positioner_X,1)
+        [_stagePositionYError, _stagePositionY] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positioner_Y,1)
+        [_stagePositionZError, _stagePositionZ] = self._XPSSystem.GroupPositionCurrentGet(self._socketID1,self.positioner_Z,1)
 
         # Retruns the locations
         return _stagePositionX, _stagePositionY, _stagePositionZ
 
     def checkMotionStatus(self):
         # Gets the current motion status of each positioner
-        [_stageMotionStatusXError, _stageMotionStatusX] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
-        [_stageMotionStatusYError, _stageMotionStatusY] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
-        [_stageMotionStatusZError, _stageMotionStatusZ] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positionerXYX,1)
+        [_stageMotionStatusXError, _stageMotionStatusX] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positioner_X,1)
+        [_stageMotionStatusYError, _stageMotionStatusY] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positioner_X,1)
+        [_stageMotionStatusZError, _stageMotionStatusZ] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.positioner_X,1)
         [_stageMotionStatusError, _stageMotionStatus] = self._XPSSystem.GroupMotionStatusGet(self._socketID2,self.macroGroup,1)
         if _stageMotionStatusX == 0 and _stageMotionStatusY == 0 and _stageMotionStatusZ == 0:
             return 0
