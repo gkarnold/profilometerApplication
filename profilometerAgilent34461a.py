@@ -16,7 +16,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         print('agilent34461a intialized')
 
 
-    def retrieveReading(self):
+    def retrieveVoltage(self):
         print('Started reading Agilent 34461a Multimeter')
         # Sets a sample size
         multimeterReadingsSampleSize = 10
