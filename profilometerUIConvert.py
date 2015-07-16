@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'profilometer.ui'
 #
-# Created: Fri Jul 10 15:54:37 2015
+# Created: Thu Jul 16 14:23:45 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -34,12 +34,21 @@ class Ui_formProfilometer(object):
         self.buttonStartStop.setGeometry(QtCore.QRect(40, 150, 110, 61))
         self.buttonStartStop.setObjectName(_fromUtf8("buttonStartStop"))
         self.frameProfileDisplay = QtGui.QFrame(formProfilometer)
-        self.frameProfileDisplay.setGeometry(QtCore.QRect(210, 10, 431, 331))
+        self.frameProfileDisplay.setGeometry(QtCore.QRect(200, 10, 441, 331))
         self.frameProfileDisplay.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frameProfileDisplay.setFrameShadow(QtGui.QFrame.Raised)
         self.frameProfileDisplay.setObjectName(_fromUtf8("frameProfileDisplay"))
+        self.horizontalLayoutWidget = QtGui.QWidget(self.frameProfileDisplay)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(9, 9, 421, 311))
+        self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
+        self.layoutPlot = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+        self.layoutPlot.setMargin(0)
+        self.layoutPlot.setObjectName(_fromUtf8("layoutPlot"))
+        self.graphicsViewPlot = QtGui.QGraphicsView(self.horizontalLayoutWidget)
+        self.graphicsViewPlot.setObjectName(_fromUtf8("graphicsViewPlot"))
+        self.layoutPlot.addWidget(self.graphicsViewPlot)
         self.lineProfilometerControlsSubstrteControls = QtGui.QFrame(formProfilometer)
-        self.lineProfilometerControlsSubstrteControls.setGeometry(QtCore.QRect(10, 210, 191, 16))
+        self.lineProfilometerControlsSubstrteControls.setGeometry(QtCore.QRect(10, 210, 181, 16))
         self.lineProfilometerControlsSubstrteControls.setFrameShape(QtGui.QFrame.HLine)
         self.lineProfilometerControlsSubstrteControls.setFrameShadow(QtGui.QFrame.Sunken)
         self.lineProfilometerControlsSubstrteControls.setObjectName(_fromUtf8("lineProfilometerControlsSubstrteControls"))
@@ -50,7 +59,7 @@ class Ui_formProfilometer(object):
         self.groupBoxTravelDirection.setGeometry(QtCore.QRect(30, 90, 131, 51))
         self.groupBoxTravelDirection.setObjectName(_fromUtf8("groupBoxTravelDirection"))
         self.layoutWidget = QtGui.QWidget(self.groupBoxTravelDirection)
-        self.layoutWidget.setGeometry(QtCore.QRect(10, 20, 131, 18))
+        self.layoutWidget.setGeometry(QtCore.QRect(10, 20, 111, 31))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.layoutTravelDirection = QtGui.QHBoxLayout(self.layoutWidget)
         self.layoutTravelDirection.setMargin(0)
@@ -133,7 +142,7 @@ class Ui_formProfilometer(object):
         self.buttonZNegative.setObjectName(_fromUtf8("buttonZNegative"))
         self.layoutButtonsMovementDirections.addWidget(self.buttonZNegative, 1, 2, 1, 1)
         self.layoutWidget4 = QtGui.QWidget(formProfilometer)
-        self.layoutWidget4.setGeometry(QtCore.QRect(10, 250, 191, 23))
+        self.layoutWidget4.setGeometry(QtCore.QRect(10, 250, 181, 23))
         self.layoutWidget4.setObjectName(_fromUtf8("layoutWidget4"))
         self.layoutMovemetDistance = QtGui.QHBoxLayout(self.layoutWidget4)
         self.layoutMovemetDistance.setMargin(0)
@@ -176,15 +185,15 @@ class Ui_formProfilometer(object):
         self.buttonSave.setText(_translate("formProfilometer", "Save", None))
         self.labelProfilometerControls.setText(_translate("formProfilometer", "Profilometer Controls", None))
         self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance(mm):", None))
-        self.labelStepSize.setText(_translate("formProfilometer", "Step Size(µm):", None))
-        self.entryBoxStepSize.setText(_translate("formProfilometer", "0", None))
-        self.entryBoxTravelDistance.setText(_translate("formProfilometer", "0", None))
+        self.labelStepSize.setText(_translate("formProfilometer", "Step Size(um):", None))
+        self.entryBoxStepSize.setText(_translate("formProfilometer", "500", None))
+        self.entryBoxTravelDistance.setText(_translate("formProfilometer", "2", None))
         self.buttonXPositive.setText(_translate("formProfilometer", "+ X", None))
         self.buttonYPositive.setText(_translate("formProfilometer", "+ Y", None))
         self.buttonZPositive.setText(_translate("formProfilometer", "+ Z", None))
         self.buttonXNegative.setText(_translate("formProfilometer", "- X", None))
         self.buttonYNegative.setText(_translate("formProfilometer", "- Y", None))
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
-        self.labelMovementDistance.setText(_translate("formProfilometer", "Movement Distance(mm):", None))
+        self.labelMovementDistance.setText(_translate("formProfilometer", " Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
 

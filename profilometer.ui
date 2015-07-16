@@ -42,9 +42,9 @@
   <widget class="QFrame" name="frameProfileDisplay">
    <property name="geometry">
     <rect>
-     <x>210</x>
+     <x>200</x>
      <y>10</y>
-     <width>431</width>
+     <width>441</width>
      <height>331</height>
     </rect>
    </property>
@@ -54,13 +54,28 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>421</width>
+      <height>311</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="layoutPlot">
+     <item>
+      <widget class="QGraphicsView" name="graphicsViewPlot"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="Line" name="lineProfilometerControlsSubstrteControls">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>210</y>
-     <width>191</width>
+     <width>181</width>
      <height>16</height>
     </rect>
    </property>
@@ -98,8 +113,8 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>131</width>
-      <height>18</height>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="layoutTravelDirection">
@@ -157,7 +172,11 @@
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="entryBoxFileName"/>
+     <widget class="QLineEdit" name="entryBoxFileName">
+      <property name="text">
+       <string>aaa</string>
+      </property>
+     </widget>
     </item>
     <item row="0" column="2">
      <widget class="QPushButton" name="buttonSave">
@@ -203,7 +222,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="labelStepSize">
         <property name="text">
-         <string>Step Size(µm):</string>
+         <string>Step Size(um):</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -213,14 +232,14 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="entryBoxStepSize">
         <property name="text">
-         <string>0</string>
+         <string>500</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="entryBoxTravelDistance">
         <property name="text">
-         <string>0</string>
+         <string>2</string>
         </property>
        </widget>
       </item>
@@ -287,7 +306,7 @@
     <rect>
      <x>10</x>
      <y>250</y>
-     <width>191</width>
+     <width>181</width>
      <height>23</height>
     </rect>
    </property>
@@ -295,7 +314,7 @@
     <item>
      <widget class="QLabel" name="labelMovementDistance">
       <property name="text">
-       <string>Movement Distance(mm):</string>
+       <string> Distance(mm):</string>
       </property>
      </widget>
     </item>
