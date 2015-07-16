@@ -11,6 +11,8 @@ from PyQt4 import QtCore, QtGui
 import profilometerParameters
 import profilometerSystemController
 
+import pyqtgraph as pg
+
 # Code from the automatic generation from the UI file
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -47,12 +49,21 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonStartStop.setGeometry(QtCore.QRect(40, 150, 110, 61))
         self.buttonStartStop.setObjectName(_fromUtf8("buttonStartStop"))
         self.frameProfileDisplay = QtGui.QFrame(formProfilometer)
-        self.frameProfileDisplay.setGeometry(QtCore.QRect(210, 10, 431, 331))
+        self.frameProfileDisplay.setGeometry(QtCore.QRect(200, 10, 441, 331))
         self.frameProfileDisplay.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frameProfileDisplay.setFrameShadow(QtGui.QFrame.Raised)
         self.frameProfileDisplay.setObjectName(_fromUtf8("frameProfileDisplay"))
+        self.horizontalLayoutWidget = QtGui.QWidget(self.frameProfileDisplay)
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(9, 9, 421, 311))
+        self.horizontalLayoutWidget.setObjectName(_fromUtf8("horizontalLayoutWidget"))
+        self.layoutPlot = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+        self.layoutPlot.setMargin(0)
+        self.layoutPlot.setObjectName(_fromUtf8("layoutPlot"))
+        self.graphicsViewPlot = QtGui.QGraphicsView(self.horizontalLayoutWidget)
+        self.graphicsViewPlot.setObjectName(_fromUtf8("graphicsViewPlot"))
+        self.layoutPlot.addWidget(self.graphicsViewPlot)
         self.lineProfilometerControlsSubstrteControls = QtGui.QFrame(formProfilometer)
-        self.lineProfilometerControlsSubstrteControls.setGeometry(QtCore.QRect(10, 210, 191, 16))
+        self.lineProfilometerControlsSubstrteControls.setGeometry(QtCore.QRect(10, 210, 181, 16))
         self.lineProfilometerControlsSubstrteControls.setFrameShape(QtGui.QFrame.HLine)
         self.lineProfilometerControlsSubstrteControls.setFrameShadow(QtGui.QFrame.Sunken)
         self.lineProfilometerControlsSubstrteControls.setObjectName(_fromUtf8("lineProfilometerControlsSubstrteControls"))
@@ -63,7 +74,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.groupBoxTravelDirection.setGeometry(QtCore.QRect(30, 90, 131, 51))
         self.groupBoxTravelDirection.setObjectName(_fromUtf8("groupBoxTravelDirection"))
         self.layoutWidget = QtGui.QWidget(self.groupBoxTravelDirection)
-        self.layoutWidget.setGeometry(QtCore.QRect(10, 20, 131, 18))
+        self.layoutWidget.setGeometry(QtCore.QRect(10, 20, 111, 31))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.layoutTravelDirection = QtGui.QHBoxLayout(self.layoutWidget)
         self.layoutTravelDirection.setMargin(0)
@@ -146,7 +157,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZNegative.setObjectName(_fromUtf8("buttonZNegative"))
         self.layoutButtonsMovementDirections.addWidget(self.buttonZNegative, 1, 2, 1, 1)
         self.layoutWidget4 = QtGui.QWidget(formProfilometer)
-        self.layoutWidget4.setGeometry(QtCore.QRect(10, 250, 191, 23))
+        self.layoutWidget4.setGeometry(QtCore.QRect(10, 250, 181, 23))
         self.layoutWidget4.setObjectName(_fromUtf8("layoutWidget4"))
         self.layoutMovemetDistance = QtGui.QHBoxLayout(self.layoutWidget4)
         self.layoutMovemetDistance.setMargin(0)
@@ -199,7 +210,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonXNegative.setText(_translate("formProfilometer", "- X", None))
         self.buttonYNegative.setText(_translate("formProfilometer", "- Y", None))
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
-        self.labelMovementDistance.setText(_translate("formProfilometer", "Movement Distance(mm):", None))
+        self.labelMovementDistance.setText(_translate("formProfilometer", " Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
 
 
@@ -252,6 +263,26 @@ class Ui_formProfilometer(QtGui.QWidget):
     # This saves the profilomter data to the file name specified.
     def buttonClickedSave(self):
         print('Save Clicked')
+
+        # While loop that checks for widgets within the plot layout and then deletes them
+        # This is used to clear the plot each time a new plot is added to the plot layout
+        while self.layoutPlot.count() > 0:
+            item = self.layoutPlot.takeAt(0)
+            if not item:
+                continue
+            w = item.widget()
+            if w:
+                w.deleteLater()
+
+        [data_X, data_millivolts] = self.systemController.saveData(str(self.entryBoxFileName.text()))
+        # dataPlot = pg.plot(data_X, data_millivolts, pen='r')
+
+        graphicsLayoutWidget = pg.GraphicsLayoutWidget()
+        graphicsLayout = pg.GraphicsLayout(border=(100,100,100))
+        graphicsLayoutWidget.addItem(graphicsLayout)
+        plot1 = graphicsLayout.addPlot(title='Profile')
+        plot1.plot(x = data_X, y = data_millivolts)
+        self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the origin button.
     # This takes the profilometer to the origin.
