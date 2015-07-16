@@ -11,6 +11,8 @@ import profilometerXYZStages # File containing XYZStages class
 import profilometerAgilent34461a # File containing Agilent 34461a class
 import profilometerDataClass # File containing the data class
 
+import math
+
 # Defines the systemController class
 class systemController(threading.Thread):
 
@@ -36,7 +38,7 @@ class systemController(threading.Thread):
     def run(self):
         self.initializeEquipment()
         self.initializeData()
-        self.getVariables()
+        self.retrieveVariables()
         while (True):
             # self.getVariables()
 
@@ -160,7 +162,7 @@ class systemController(threading.Thread):
 
 
     # Method to update the instance variables
-    def getVariables(self):
+    def retrieveVariables(self):
         self.systemControllerProfilometerRoutineStart = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
 
@@ -168,3 +170,25 @@ class systemController(threading.Thread):
         self.systemControllerProfilometerRoutineDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineDirection)
         self.systemControllerProfilometerRoutineStepSize = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize)
         self.systemControllerProfilometerRoutineTravelDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance)
+
+    def saveData(self,fileName):
+
+        data_X = []
+        data_millivolts = []
+
+        if fileName == '':
+            print('Please enter a file name')
+            return
+        for i in range(2000):
+            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
+
+        dataFile = open('{}.txt'.format(fileName),'w')
+
+        for dataSet in profilometerParameters.retrieveDataStorageInstances():
+            dataFile.write('Test write {},{},{} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
+            data_X.append(dataSet.x)
+            data_millivolts.append(dataSet.millivolts)
+
+        dataFile.close()
+
+        return data_X, data_millivolts
