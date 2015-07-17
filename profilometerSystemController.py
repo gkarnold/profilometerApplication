@@ -87,6 +87,9 @@ class systemController(threading.Thread):
         [stageX, stageY, stageZ] = self.substrateStages.retrieveStagePostion()
         print('Stage Position (x,y,z): ({},{},{})'.format(stageX,stageY,stageZ))
 
+        # Permanent Usage: Take stage to omron home: (2, 41, 9.4) (x, y, z)
+        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[2,41,9.4])
+
     # Method that runs the profilometer routine
     def profilometerRoutine(self, direction, travelDistance, stepSize):
         # Converts the travel distance and step size to a float
@@ -96,8 +99,9 @@ class systemController(threading.Thread):
         # Changes profilometer start to false so that the routine only runs once
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
 
-        # Clears the data from any previous runs
-        profilometerParameters.clearDataStorageInstances()
+        ## --------- ## Uncomment this for real run
+        # # Clears the data from any previous runs
+        # profilometerParameters.clearDataStorageInstances()
 
         # Creates an instance of the stages
         _stagesInstance = profilometerXYZStages.XYZStages()
@@ -157,8 +161,15 @@ class systemController(threading.Thread):
 
         print('Profilometer Routine Complete')
 
-        # Updates the global parameter for profilometer routine running to false at end of print routine
-        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
+
+        ### ---- ### UNCOMMENT BELOW EVENTUALLY
+        # For now we will force the user to click the stop button once the routine finishes.
+        # This is so that we can free the interface without having to start/stop the print routine
+
+        # # Updates the global parameter for profilometer routine running to false at end of print routine
+        # profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
+
+
 
 
     # Method to update the instance variables
@@ -171,24 +182,36 @@ class systemController(threading.Thread):
         self.systemControllerProfilometerRoutineStepSize = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStepSize)
         self.systemControllerProfilometerRoutineTravelDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance)
 
-    def saveData(self,fileName):
+    # Method to save the data from the last run
+    def saveData(self,_fileName,_direction):
+        # Creates two lists that will be appended to with the desired data
+        _dataDirection = []
+        _dataMillivolts = []
 
-        data_X = []
-        data_millivolts = []
-
-        if fileName == '':
+        # Checks to make sure user entered a file name
+        if _fileName == '':
             print('Please enter a file name')
             return
-        for i in range(2000):
-            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
-        dataFile = open('{}.txt'.format(fileName),'w')
+        ## Generates fake data for testing
+        # for i in range(2000):
+        #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
+        # Opens a file to save the data to
+        _dataFile = open('{}.txt'.format(_fileName),'w')
+
+        # Loops through each data class instance and writes the data to the file opened
+        # Also pulls out he desired data (direction values and millivolt readings for returning
         for dataSet in profilometerParameters.retrieveDataStorageInstances():
-            dataFile.write('Test write {},{},{} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
-            data_X.append(dataSet.x)
-            data_millivolts.append(dataSet.millivolts)
+            _dataFile.write('{},{},{} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
+            if _direction == 'X':
+                _dataDirection.append(dataSet.x)
+            elif _direction == 'Y':
+                _dataDirection.append(dataSet.y)
+            _dataMillivolts.append(dataSet.millivolts)
 
-        dataFile.close()
+        # Closes the data file
+        _dataFile.close()
 
-        return data_X, data_millivolts
+        # Returns the direction and millicolts data
+        return _dataDirection, _dataMillivolts

@@ -212,6 +212,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
         self.labelMovementDistance.setText(_translate("formProfilometer", " Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
+        self.entryBoxFileName.setText(_translate('formProdilometer','aaa',None))
 
 
         # Button clicked commands added after generation, these direct the program to the correct method upon each button click
@@ -274,8 +275,8 @@ class Ui_formProfilometer(QtGui.QWidget):
             if w:
                 w.deleteLater()
 
-        [data_X, data_millivolts] = self.systemController.saveData(str(self.entryBoxFileName.text()))
-        # dataPlot = pg.plot(data_X, data_millivolts, pen='r')
+        [data_X, data_millivolts] = self.systemController.saveData(str(self.entryBoxFileName.text()),self.retrieveProfilometerRoutineDirection())
+        # self.systemController.saveData(str(self.entryBoxFileName.text()))
 
         graphicsLayoutWidget = pg.GraphicsLayoutWidget()
         graphicsLayout = pg.GraphicsLayout(border=(100,100,100))
@@ -336,7 +337,11 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonYNegative.setEnabled(_condition)
         self.buttonZPositive.setEnabled(_condition)
         self.buttonZNegative.setEnabled(_condition)
-        self.buttonSave.setEnabled(_condition)
+
+        # TEMP KEEP SAVE BUTTON ACTIVE
+        # self.buttonSave.setEnabled(_condition)
+
+
         # Changes clickability of radio buttons
         self.radioButtonY.setEnabled(_condition)
         self.radioButtonX.setEnabled(_condition)
