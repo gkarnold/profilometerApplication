@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'profilometer.ui'
 #
-# Created: Thu Jul 16 14:23:45 2015
+# Created: Fri Jul 17 15:36:56 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,7 +26,7 @@ except AttributeError:
 class Ui_formProfilometer(object):
     def setupUi(self, formProfilometer):
         formProfilometer.setObjectName(_fromUtf8("formProfilometer"))
-        formProfilometer.resize(655, 396)
+        formProfilometer.resize(655, 536)
         self.buttonOrigin = QtGui.QPushButton(formProfilometer)
         self.buttonOrigin.setGeometry(QtCore.QRect(30, 350, 81, 41))
         self.buttonOrigin.setObjectName(_fromUtf8("buttonOrigin"))
@@ -153,6 +153,10 @@ class Ui_formProfilometer(object):
         self.entryBoxMovementDistance = QtGui.QLineEdit(self.layoutWidget4)
         self.entryBoxMovementDistance.setObjectName(_fromUtf8("entryBoxMovementDistance"))
         self.layoutMovemetDistance.addWidget(self.entryBoxMovementDistance)
+        self.entryBoxHeader = QtGui.QPlainTextEdit(formProfilometer)
+        self.entryBoxHeader.setGeometry(QtCore.QRect(210, 390, 431, 121))
+        self.entryBoxHeader.setOverwriteMode(False)
+        self.entryBoxHeader.setObjectName(_fromUtf8("entryBoxHeader"))
 
         self.retranslateUi(formProfilometer)
         QtCore.QMetaObject.connectSlotsByName(formProfilometer)
@@ -171,6 +175,8 @@ class Ui_formProfilometer(object):
         formProfilometer.setTabOrder(self.buttonOrigin, self.buttonCalibrate)
         formProfilometer.setTabOrder(self.buttonCalibrate, self.entryBoxFileName)
         formProfilometer.setTabOrder(self.entryBoxFileName, self.buttonSave)
+        formProfilometer.setTabOrder(self.buttonSave, self.entryBoxHeader)
+        formProfilometer.setTabOrder(self.entryBoxHeader, self.graphicsViewPlot)
 
     def retranslateUi(self, formProfilometer):
         formProfilometer.setWindowTitle(_translate("formProfilometer", "Profilometer", None))
@@ -182,6 +188,7 @@ class Ui_formProfilometer(object):
         self.radioButtonY.setText(_translate("formProfilometer", "Y", None))
         self.buttonCalibrate.setText(_translate("formProfilometer", "Calibrate", None))
         self.labelFileName.setText(_translate("formProfilometer", "File Name:", None))
+        self.entryBoxFileName.setText(_translate("formProfilometer", "aaa", None))
         self.buttonSave.setText(_translate("formProfilometer", "Save", None))
         self.labelProfilometerControls.setText(_translate("formProfilometer", "Profilometer Controls", None))
         self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance(mm):", None))
@@ -196,4 +203,5 @@ class Ui_formProfilometer(object):
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
         self.labelMovementDistance.setText(_translate("formProfilometer", " Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
+        self.entryBoxHeader.setPlainText(_translate("formProfilometer", "Enter Header Text Here", None))
 

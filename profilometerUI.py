@@ -40,7 +40,7 @@ class Ui_formProfilometer(QtGui.QWidget):
     # Code specifying what the UI looks like, creation and location of all UI elements (generated code)
     def setupUi(self, formProfilometer):
         formProfilometer.setObjectName(_fromUtf8("formProfilometer"))
-        formProfilometer.resize(655, 396)
+        formProfilometer.resize(655, 536)
         formProfilometer.move(30,30)
         self.buttonOrigin = QtGui.QPushButton(formProfilometer)
         self.buttonOrigin.setGeometry(QtCore.QRect(30, 350, 81, 41))
@@ -168,6 +168,10 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.entryBoxMovementDistance = QtGui.QLineEdit(self.layoutWidget4)
         self.entryBoxMovementDistance.setObjectName(_fromUtf8("entryBoxMovementDistance"))
         self.layoutMovemetDistance.addWidget(self.entryBoxMovementDistance)
+        self.entryBoxHeader = QtGui.QPlainTextEdit(formProfilometer)
+        self.entryBoxHeader.setGeometry(QtCore.QRect(210, 390, 431, 121))
+        self.entryBoxHeader.setOverwriteMode(False)
+        self.entryBoxHeader.setObjectName(_fromUtf8("entryBoxHeader"))
 
         self.retranslateUi(formProfilometer)
         QtCore.QMetaObject.connectSlotsByName(formProfilometer)
@@ -186,6 +190,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         formProfilometer.setTabOrder(self.buttonOrigin, self.buttonCalibrate)
         formProfilometer.setTabOrder(self.buttonCalibrate, self.entryBoxFileName)
         formProfilometer.setTabOrder(self.entryBoxFileName, self.buttonSave)
+        formProfilometer.setTabOrder(self.buttonSave, self.entryBoxHeader)
+        formProfilometer.setTabOrder(self.entryBoxHeader, self.graphicsViewPlot)
 
     # Code specifying what the display text of the elements and what to do when they are interacted with (generated)
     def retranslateUi(self, formProfilometer):
@@ -198,6 +204,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.radioButtonY.setText(_translate("formProfilometer", "Y", None))
         self.buttonCalibrate.setText(_translate("formProfilometer", "Calibrate", None))
         self.labelFileName.setText(_translate("formProfilometer", "File Name:", None))
+        self.entryBoxFileName.setText(_translate("formProfilometer", "aaa", None))
         self.buttonSave.setText(_translate("formProfilometer", "Save", None))
         self.labelProfilometerControls.setText(_translate("formProfilometer", "Profilometer Controls", None))
         self.labelTravelDistance.setText(_translate("formProfilometer", "Travel Distance(mm):", None))
@@ -212,7 +219,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.buttonZNegative.setText(_translate("formProfilometer", "- Z", None))
         self.labelMovementDistance.setText(_translate("formProfilometer", " Distance(mm):", None))
         self.entryBoxMovementDistance.setText(_translate("formProfilometer", "0", None))
-        self.entryBoxFileName.setText(_translate('formProdilometer','aaa',None))
+        self.entryBoxHeader.setPlainText(_translate("formProfilometer", "Enter Header Text Here", None))
 
 
         # Button clicked commands added after generation, these direct the program to the correct method upon each button click

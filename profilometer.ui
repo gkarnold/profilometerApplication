@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>655</width>
-    <height>396</height>
+    <height>536</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -327,6 +327,22 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPlainTextEdit" name="entryBoxHeader">
+   <property name="geometry">
+    <rect>
+     <x>210</x>
+     <y>390</y>
+     <width>431</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="plainText">
+    <string>Enter Header Text Here</string>
+   </property>
+   <property name="overwriteMode">
+    <bool>false</bool>
+   </property>
+  </widget>
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget</zorder>
@@ -338,6 +354,7 @@
   <zorder>labelSubstrateControls</zorder>
   <zorder>groupBoxTravelDirection</zorder>
   <zorder>buttonCalibrate</zorder>
+  <zorder>entryBoxHeader</zorder>
  </widget>
  <tabstops>
   <tabstop>entryBoxTravelDistance</tabstop>
@@ -356,6 +373,8 @@
   <tabstop>buttonCalibrate</tabstop>
   <tabstop>entryBoxFileName</tabstop>
   <tabstop>buttonSave</tabstop>
+  <tabstop>entryBoxHeader</tabstop>
+  <tabstop>graphicsViewPlot</tabstop>
  </tabstops>
  <resources/>
  <connections/>

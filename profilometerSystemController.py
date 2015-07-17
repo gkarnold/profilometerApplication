@@ -193,9 +193,9 @@ class systemController(threading.Thread):
             print('Please enter a file name')
             return
 
-        ## Generates fake data for testing
-        # for i in range(2000):
-        #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
+        # Generates fake data for testing
+        for i in range(2000):
+            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
         # Opens a file to save the data to
         _dataFile = open('{}.txt'.format(_fileName),'w')

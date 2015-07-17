@@ -5,6 +5,7 @@ XYZ Stages that inherit from the stages class.
 # Imports
 import profilometerStages # Imports the stages file for stage inheritance
 import XPS_Q8_drivers
+import sys
 
 class XYZStages(profilometerStages.stages):
 
