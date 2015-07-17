@@ -282,7 +282,7 @@ class Ui_formProfilometer(QtGui.QWidget):
             if w:
                 w.deleteLater()
 
-        [data_X, data_millivolts] = self.systemController.saveData(str(self.entryBoxFileName.text()),self.retrieveProfilometerRoutineDirection())
+        [data_X, data_millivolts] = self.systemController.saveData(str(self.entryBoxFileName.text()),self.retrieveProfilometerRoutineDirection(),self.entryBoxHeader.toPlainText())
         # self.systemController.saveData(str(self.entryBoxFileName.text()))
 
         graphicsLayoutWidget = pg.GraphicsLayoutWidget()

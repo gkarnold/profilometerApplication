@@ -183,7 +183,7 @@ class systemController(threading.Thread):
         self.systemControllerProfilometerRoutineTravelDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance)
 
     # Method to save the data from the last run
-    def saveData(self,_fileName,_direction):
+    def saveData(self,_fileName,_direction,_headerData):
         # Creates two lists that will be appended to with the desired data
         _dataDirection = []
         _dataMillivolts = []
@@ -193,17 +193,20 @@ class systemController(threading.Thread):
             print('Please enter a file name')
             return
 
-        # Generates fake data for testing
-        for i in range(2000):
-            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
+        # # Generates fake data for testing
+        # for i in range(2000):
+        #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
         # Opens a file to save the data to
         _dataFile = open('{}.txt'.format(_fileName),'w')
 
+        _dataFile.write(_headerData + '\n')
+        _dataFile.write('x, \t y, \t z : \t Millivolts  \n')
+
         # Loops through each data class instance and writes the data to the file opened
         # Also pulls out he desired data (direction values and millivolt readings for returning
         for dataSet in profilometerParameters.retrieveDataStorageInstances():
-            _dataFile.write('{},{},{} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
+            _dataFile.write('{}, {}, {} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
             if _direction == 'X':
                 _dataDirection.append(dataSet.x)
             elif _direction == 'Y':
