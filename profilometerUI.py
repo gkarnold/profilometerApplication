@@ -270,8 +270,6 @@ class Ui_formProfilometer(QtGui.QWidget):
     # Method for clicking the save button.
     # This saves the profilomter data to the file name specified.
     def buttonClickedSave(self):
-        print('Save Clicked')
-
         # While loop that checks for widgets within the plot layout and then deletes them
         # This is used to clear the plot each time a new plot is added to the plot layout
         while self.layoutPlot.count() > 0:
@@ -295,19 +293,16 @@ class Ui_formProfilometer(QtGui.QWidget):
     # Method for clicking the origin button.
     # This takes the profilometer to the origin.
     def buttonClickedOrigin(self):
-        print('Origin Clicked')
         self.systemController.moveStageToOrigin()
 
     # Method for clicking the calibrate button.
     # This allows us to determine if the profilomter is reading correctly.
     def buttonClickedCalibrate(self):
-        print('Calibrate Clicked')
         self.systemController.calibrateProfilometer()
 
     # Method for clicking the manual movement buttons.
     # Moves the stage in the specified direction direction by specified amount.
     def buttonClickedManualMove(self,_stageMovementManualDirection,_stageMovementManualDistance):
-        print('Manual Move Clicked')
         self.systemController.moveTheStage(_stageMovementManualDirection,_stageMovementManualDistance)
 
     # Method for determining which direction to run the profilometer routine
@@ -357,6 +352,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.entryBoxStepSize.setEnabled(_condition)
         self.entryBoxMovementDistance.setEnabled(_condition)
         self.entryBoxFileName.setEnabled(_condition)
+        self.entryBoxHeader.setEnabled(_condition)
 
 def profilometerUIMain():
     # Creates the GUI application

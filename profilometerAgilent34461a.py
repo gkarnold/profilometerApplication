@@ -17,7 +17,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
 
     def retrieveVoltage(self):
         # Sets a sample size
-        multimeterReadingsSampleSize = 10
+        multimeterReadingsSampleSize = 3
         # Sets a varaible that will hold the total value of all multimeter readings for finding the average
         multimeterReadingsTotals = 0.0
         for i in range(multimeterReadingsSampleSize):
@@ -29,7 +29,6 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         # Finds the average multimeter reading
         multimeterReadingsAverage = multimeterReadingsTotals/multimeterReadingsSampleSize
 
-        print(multimeterReadingsAverage)
         return multimeterReadingsAverage
 
     def reachEquilibrium(self):

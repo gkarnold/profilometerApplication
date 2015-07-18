@@ -99,9 +99,8 @@ class systemController(threading.Thread):
         # Changes profilometer start to false so that the routine only runs once
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineStart,False)
 
-        ## --------- ## Uncomment this for real run
-        # # Clears the data from any previous runs
-        # profilometerParameters.clearDataStorageInstances()
+        # Clears the data from any previous runs
+        profilometerParameters.clearDataStorageInstances()
 
         # Creates an instance of the stages
         _stagesInstance = profilometerXYZStages.XYZStages()
@@ -201,12 +200,12 @@ class systemController(threading.Thread):
         _dataFile = open('{}.txt'.format(_fileName),'w')
 
         _dataFile.write(_headerData + '\n')
-        _dataFile.write('x, \t y, \t z : \t Millivolts  \n')
+        _dataFile.write('x,y,z,Millivolts  \n')
 
         # Loops through each data class instance and writes the data to the file opened
         # Also pulls out he desired data (direction values and millivolt readings for returning
         for dataSet in profilometerParameters.retrieveDataStorageInstances():
-            _dataFile.write('{}, {}, {} : {}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
+            _dataFile.write('{},{},{},{}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
             if _direction == 'X':
                 _dataDirection.append(dataSet.x)
             elif _direction == 'Y':
