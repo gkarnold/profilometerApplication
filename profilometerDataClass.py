@@ -17,35 +17,3 @@ class profilometerData():
 
         # Adds the instance to the global list of the instances
         profilometerParameters.updateDataStorageInstances(self)
-
-
-
-
-'''
-#Commented out, this is for testing that the class is functioning properly with the global variable module
-
-def main():
-
-
-    for i in range(5):
-        x = float(raw_input('x data: '))
-        y = 1
-        z = 1
-        V = 1
-        data = profilometerData(x,y,z,V)
-
-    xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
-    print(xData)
-
-    print(profilometerParameters.retrieveDataStorageInstances())
-    profilometerParameters.clearDataStorageInstances()
-    xData = [name.x for name in profilometerParameters.retrieveDataStorageInstances()]
-    print(xData)
-
-    print(profilometerParameters.retrieveDataStorageInstances())
-
-
-
-if __name__ == '__main__':
-    main()
-'''
