@@ -74,9 +74,9 @@ class systemController(threading.Thread):
 
         self.substrateStages.moveStageRelative(direction,[distance])
 
-    # Method to move the stages to the origin
+    # Method to move the stages to the origin (profilometer start position) (2,41,9.4) per Chris
     def moveStageToOrigin(self):
-        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[0,0,0])
+        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[2,41,9.4])
 
     # Method to determine if the profilometer is properly calibrated
     # Moves stage by 0.5 mm in Z and checks to see how much the omron sensor thinks the stage moved
@@ -84,9 +84,6 @@ class systemController(threading.Thread):
         # Temporary Usage: Get current location
         [stageX, stageY, stageZ] = self.substrateStages.retrieveStagePostion()
         print('Stage Position (x,y,z): ({},{},{})'.format(stageX,stageY,stageZ))
-
-        # Permanent Usage: Take stage to omron home: (2, 41, 9.4) (x, y, z)
-        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[2,41,9.4])
 
     # Method that runs the profilometer routine
     def profilometerRoutine(self, direction, travelDistance, stepSize):
@@ -180,38 +177,26 @@ class systemController(threading.Thread):
         self.systemControllerProfilometerRoutineTravelDirection = profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance)
 
     # Method to save the data from the last run
-    def saveData(self,_fileName,_direction,_headerData):
-        # Creates two lists that will be appended to with the desired data
-        _dataDirection = []
+    def retrieveData(self):
+        # Creates lists that will be appended to with the desired data
+        _dataDirection_X = []
+        _dataDirection_Y = []
+        _dataDirection_Z = []
         _dataMillivolts = []
 
-        # Checks to make sure user entered a file name
-        if _fileName == '':
-            print('Please enter a file name')
-            return
-
         # # Generates fake data for testing
+        # profilometerParameters.clearDataStorageInstances()
         # for i in range(2000):
         #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
-        # Opens a file to save the data to
-        _dataFile = open('{}.txt'.format(_fileName),'w')
+        # Loops through each data class instance and appends the data to the lists
+        # Also pulls out the data to return
+        for _dataSet in profilometerParameters.retrieveDataStorageInstances():
+            _dataDirection_X.append(_dataSet.x)
+            _dataDirection_Y.append(_dataSet.y)
+            _dataDirection_Z.append(_dataSet.z)
+            _dataMillivolts.append(_dataSet.millivolts)
 
-        _dataFile.write(_headerData + '\n')
-        _dataFile.write('x,y,z,Millivolts  \n')
 
-        # Loops through each data class instance and writes the data to the file opened
-        # Also pulls out he desired data (direction values and millivolt readings for returning
-        for dataSet in profilometerParameters.retrieveDataStorageInstances():
-            _dataFile.write('{},{},{},{}\n'.format(dataSet.x,dataSet.y,dataSet.z,dataSet.millivolts))
-            if _direction == 'X':
-                _dataDirection.append(dataSet.x)
-            elif _direction == 'Y':
-                _dataDirection.append(dataSet.y)
-            _dataMillivolts.append(dataSet.millivolts)
-
-        # Closes the data file
-        _dataFile.close()
-
-        # Returns the direction and millicolts data
-        return _dataDirection, _dataMillivolts
+        # Returns the direction and millivolts data
+        return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataMillivolts
