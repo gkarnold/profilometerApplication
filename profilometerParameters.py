@@ -23,6 +23,7 @@ kHNSystemControllerProfilometer_routineStart = 'kHNSystemControllerProfilometer_
 kHNSystemControllerProfilometer_routineStepSize = 'kHNSystemControllerProfilometer_routineStepSize'
 kHNSystemControllerProfilometer_routineDirection = 'kHNSystemControllerProfilometer_routineDirection'
 kHNSystemControllerProfilometer_routineTravelDistance = 'kHNSystemControllerProfilometer_routineTravelDistance'
+kHNSystemControllerProfilometer_calibrationRatio = 'kHNSystemControllerProfilometer_calibrationRatio'
 
 # Data Storage instance ID list
 _kHNSystemControllerProfilometer_dataStorageInstances = []
