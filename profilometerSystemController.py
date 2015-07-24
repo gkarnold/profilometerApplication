@@ -36,8 +36,9 @@ class systemController(threading.Thread):
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineTravelDistance,'0')
 
     def run(self):
-        self.initializeEquipment()
+        # Initializes the data and equipment
         self.initializeData()
+        self.initializeEquipment()
         self.retrieveVariables()
         while (True):
             # if self.systemControllerProfilometerRoutineStart: # True - start profilometer routine # Commented out to see if we can skip getVaraibles
@@ -58,7 +59,8 @@ class systemController(threading.Thread):
 
     # Initializes the Data
     def initializeData(self):
-        pass
+        # Sets the profilometer correction ratio to 1
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio,1)
 
     # Method to move the stages in the specified direction by the specified amount
     def moveTheStage(self,direction,distance):
@@ -84,6 +86,21 @@ class systemController(threading.Thread):
         # Temporary Usage: Get current location
         [stageX, stageY, stageZ] = self.substrateStages.retrieveStagePostion()
         print('Stage Position (x,y,z): ({},{},{})'.format(stageX,stageY,stageZ))
+
+        # Checks the omron sensor for its current reading
+        _calibrationValue1 = self.Agilent34461a.retrieveVoltage()
+
+        # Moves the satges in the -Z direction by 0.5 mm
+        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,-0.5)
+
+        # Checks the omron sensor for its new reading
+        _calibrationValue2 = self.Agilent34461a.retrieveVoltage()
+
+        # Finds the correction ratio based on the known move distance and the read move distance
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio,(-0.5/(_calibrationValue2 - _calibrationValue1)))
+
+        # Moves the stages back up 0.5 mm to their original postion
+        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,0.5)
 
     # Method that runs the profilometer routine
     def profilometerRoutine(self, direction, travelDistance, stepSize):
