@@ -12,6 +12,8 @@ import profilometerParameters
 import profilometerSystemController
 import csv
 import pyqtgraph as pg
+import os
+
 
 # Code from the automatic generation from the UI file
 try:
@@ -289,15 +291,18 @@ class Ui_formProfilometer(QtGui.QWidget):
         # Retrieves the direction and millivolts data from the system controller
         [data_X, data_Y, data_Z, data_millivolts] = self.systemController.retrieveData()
 
+        # Checks to see if the desired default path doesn't exists on the machine
+        if not os.path.exists(profilometerParameters.profilometerDefaultSavePath):
+            # Tries to create the desired default path if it doesn't exist
+            try:
+                os.makedirs(profilometerParameters.profilometerDefaultSavePath)
+            except:
+                pass
 
+        # Opens a save as dialog directed towards the users' Documents/Data/Profilometer folder
+        _saveFileName, saveButtonClicked = QtGui.QFileDialog.getSaveFileNameAndFilter(self, "Save Profilometer Data", os.path.expanduser('~/Documents/Data/Profilometer'))
 
-
-
-
-
-
-        _saveFileName, saveButtonClicked = QtGui.QFileDialog.getSaveFileNameAndFilter()
-        # If the user clicks the save button the data is saved
+        # If the user clicks the save button the data is saved as a csv
         if saveButtonClicked:
             # Opens the CSV file to save the data too
             _dataFile = open(str(_saveFileName) + '.csv','wt')
@@ -331,6 +336,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         graphicsLayoutWidget.addItem(graphicsLayout)
         plot1 = graphicsLayout.addPlot(title='Profile')
         plot1.plot(x = data_X, y = data_millivolts)
+        plot1.setLabel('bottom','Distance (mm)')
+        plot1.setLabel('left','Height (mV)')
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
 
