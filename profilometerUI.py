@@ -316,6 +316,8 @@ class Ui_formProfilometer(QtGui.QWidget):
             for block in range(numberOfBlocks):
                 _dataWriter.writerow(('# ' + str(self.entryBoxHeader.document().findBlockByNumber(block).text()),'')) # '' is needed to keep each line together
 
+            # Includes the calibration ratio used below the header data
+            _dataWriter.writerow(('# Calibration ratio used: ' + str(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio)),''))
 
             # Writes the column headers into the file
             _dataWriter.writerow(('X','Y','Z','Millivolts'))
