@@ -200,11 +200,12 @@ class systemController(threading.Thread):
         _dataDirection_Y = []
         _dataDirection_Z = []
         _dataMillivolts = []
+        _dataHeight = []
 
-        # # Generates fake data for testing
-        # profilometerParameters.clearDataStorageInstances()
-        # for i in range(2000):
-        #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
+        # Generates fake data for testing
+        profilometerParameters.clearDataStorageInstances()
+        for i in range(2000):
+            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
         # Loops through each data class instance and appends the data to the lists
         # Also pulls out the data to return
@@ -213,7 +214,8 @@ class systemController(threading.Thread):
             _dataDirection_Y.append(_dataSet.y)
             _dataDirection_Z.append(_dataSet.z)
             _dataMillivolts.append(_dataSet.millivolts)
-
+            #Calculates the height of the sample by dividing the millivolts by 10 and multiplying it by the correction factor
+            _dataHeight.append(_dataSet.millivolts/10*profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
 
         # Returns the direction and millivolts data
-        return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataMillivolts
+        return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataMillivolts, _dataHeight
