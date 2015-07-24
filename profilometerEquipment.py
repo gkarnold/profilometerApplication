@@ -7,7 +7,6 @@ class equipment():
 
     # Initializes the equipment class
     def __init__(self):
-        print('Equipment Initialized')
         return
 
     def currentPowerState(self):
