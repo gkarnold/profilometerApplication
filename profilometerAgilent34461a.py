@@ -16,7 +16,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
 
 
     def retrieveVoltage(self):
-        profilometerParameters.agilent34461a.query("DIAG:REMOTE")
+        # profilometerParameters.agilent34461a.query("DIAG:REMOTE")
 
         # Sets a sample size
         multimeterReadingsSampleSize = 3
@@ -35,7 +35,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         multimeterReadingsAverage = multimeterReadingsTotals/multimeterReadingsSampleSize
 
         # Returns the multimeter back to local so that the display updates
-        profilometerParameters.agilent34461a.query("DIAG:LOCAL")
+        # profilometerParameters.agilent34461a.query("DIAG:LOCAL")
         return multimeterReadingsAverage
 
     def reachEquilibrium(self):

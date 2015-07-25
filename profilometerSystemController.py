@@ -92,20 +92,16 @@ class systemController(threading.Thread):
 
         # Checks the omron sensor for its current reading
         _calibrationValue1 = self.Agilent34461a.retrieveVoltage()
-        print('Val 1: {}'.format(_calibrationValue1))
 
         # Moves the satges in the -Z direction by 0.5 mm
         self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,[-0.5])
 
         # Checks the omron sensor for its new reading
         _calibrationValue2 = self.Agilent34461a.retrieveVoltage()
-        print('Val 2: {}'.format(_calibrationValue2))
-
 
         # Finds the correction ratio based on the known move distance and the read move distance
         _correctionRatio = -0.5/(_calibrationValue2 - _calibrationValue1)
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio,(_correctionRatio))
-        print(_correctionRatio)
 
         # Updates the routine to no longer be running
         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
@@ -210,7 +206,7 @@ class systemController(threading.Thread):
         _dataDirection_X = []
         _dataDirection_Y = []
         _dataDirection_Z = []
-        _dataMillivolts = []
+        _dataVolts = []
         _dataHeight = []
 
         # # Generates fake data for testing
@@ -224,9 +220,9 @@ class systemController(threading.Thread):
             _dataDirection_X.append(_dataSet.x)
             _dataDirection_Y.append(_dataSet.y)
             _dataDirection_Z.append(_dataSet.z)
-            _dataMillivolts.append(_dataSet.millivolts)
+            _dataVolts.append(_dataSet.volts)
             #Calculates the height of the sample by multiplying it by the correction factor
-            _dataHeight.append(_dataSet.millivolts/profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
+            _dataHeight.append(_dataSet.volts/profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
 
-        # Returns the direction and millivolts data
-        return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataMillivolts, _dataHeight
+        # Returns the direction and volts data
+        return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataVolts, _dataHeight

@@ -9,11 +9,11 @@ import profilometerParameters
 
 # Defines the profilometer data class. This class stores the x,y,z stage location and the millivolts reading
 class profilometerData():
-    def __init__(self,x,y,z,millivolts):
+    def __init__(self,x,y,z,volts):
         self.x = x
         self.y = y
         self.z = z
-        self.millivolts = millivolts
+        self.volts = volts
 
         # Adds the instance to the global list of the instances
         profilometerParameters.updateDataStorageInstances(self)

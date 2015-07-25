@@ -13,6 +13,7 @@ import profilometerSystemController
 import csv
 import pyqtgraph as pg
 import os
+import datetime
 
 
 # Code from the automatic generation from the UI file
@@ -289,7 +290,7 @@ class Ui_formProfilometer(QtGui.QWidget):
                 w.deleteLater()
 
         # Retrieves the direction and millivolts data from the system controller
-        [data_X, data_Y, data_Z, data_millivolts, data_height] = self.systemController.retrieveData()
+        [data_X, data_Y, data_Z, data_volts, data_height] = self.systemController.retrieveData()
 
         # Checks to see if the desired default path doesn't exists on the machine
         if not os.path.exists(profilometerParameters.profilometerDefaultSavePath):
@@ -319,12 +320,15 @@ class Ui_formProfilometer(QtGui.QWidget):
             # Includes the calibration ratio used below the header data
             _dataWriter.writerow(('# Calibration ratio used: ' + str(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio)),''))
 
+            # Includes the date and time of the save
+            _dataWriter.writerow(('Date and time: ' + str(datetime.datetime.now()),''))
+
             # Writes the column headers into the file
-            _dataWriter.writerow(('X','Y','Z','Millivolts'))
+            _dataWriter.writerow(('X','Y','Z','Volts','Height (mm)'))
 
             # Loops through each element of the data lists and writes them to a row in the csv
             for i in range(len(data_X)):
-                _dataWriter.writerow((data_X[i],data_Y[i],data_Z[i],data_millivolts[i],data_height[i]))
+                _dataWriter.writerow((data_X[i],data_Y[i],data_Z[i],data_volts[i],data_height[i]))
 
             # Closes the data file
             _dataFile.close()
@@ -337,7 +341,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         graphicsLayout = pg.GraphicsLayout(border=(100,100,100))
         graphicsLayoutWidget.addItem(graphicsLayout)
         plot1 = graphicsLayout.addPlot(title='Profile')
-        plot1.plot(x = data_X, y = data_millivolts)
+        plot1.plot(x = data_X, y = data_volts)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
         self.layoutPlot.addWidget(graphicsLayoutWidget)
