@@ -32,7 +32,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         multimeterReadingsAverage = multimeterReadingsTotals/multimeterReadingsSampleSize
 
         # Returns the multimeter back to local so that the display updates
-        profilometerParameters.agilent34461a.query("DIAG:LOCAL")
+        # profilometerParameters.agilent34461a.query("DIAG:LOCAL")
         return multimeterReadingsAverage
 
     def reachEquilibrium(self):

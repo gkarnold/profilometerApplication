@@ -202,10 +202,10 @@ class systemController(threading.Thread):
         _dataMillivolts = []
         _dataHeight = []
 
-        # Generates fake data for testing
-        profilometerParameters.clearDataStorageInstances()
-        for i in range(2000):
-            profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
+        # # Generates fake data for testing
+        # profilometerParameters.clearDataStorageInstances()
+        # for i in range(2000):
+        #     profilometerDataClass.profilometerData(i*1.0,i*1.0,i*1.0,math.sin(i/math.pi*180/10000)*math.exp(i/1000))
 
         # Loops through each data class instance and appends the data to the lists
         # Also pulls out the data to return
