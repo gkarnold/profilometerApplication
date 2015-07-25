@@ -87,20 +87,31 @@ class systemController(threading.Thread):
         [stageX, stageY, stageZ] = self.substrateStages.retrieveStagePostion()
         print('Stage Position (x,y,z): ({},{},{})'.format(stageX,stageY,stageZ))
 
+        # Sets the routine to running so we can get readings from the mutlimeter
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,True)
+
         # Checks the omron sensor for its current reading
         _calibrationValue1 = self.Agilent34461a.retrieveVoltage()
+        print('Val 1: {}'.format(_calibrationValue1))
 
         # Moves the satges in the -Z direction by 0.5 mm
-        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,-0.5)
+        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,[-0.5])
 
         # Checks the omron sensor for its new reading
         _calibrationValue2 = self.Agilent34461a.retrieveVoltage()
+        print('Val 2: {}'.format(_calibrationValue2))
+
 
         # Finds the correction ratio based on the known move distance and the read move distance
-        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio,(-0.5/(_calibrationValue2 - _calibrationValue1)))
+        _correctionRatio = -0.5/(_calibrationValue2 - _calibrationValue1)
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio,(_correctionRatio))
+        print(_correctionRatio)
+
+        # Updates the routine to no longer be running
+        profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning,False)
 
         # Moves the stages back up 0.5 mm to their original postion
-        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,0.5)
+        self.substrateStages.moveStageRelative(self.substrateStages.positioner_Z,[0.5])
 
     # Method that runs the profilometer routine
     def profilometerRoutine(self, direction, travelDistance, stepSize):
@@ -214,8 +225,8 @@ class systemController(threading.Thread):
             _dataDirection_Y.append(_dataSet.y)
             _dataDirection_Z.append(_dataSet.z)
             _dataMillivolts.append(_dataSet.millivolts)
-            #Calculates the height of the sample by dividing the millivolts by 10 and multiplying it by the correction factor
-            _dataHeight.append(_dataSet.millivolts/10*profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
+            #Calculates the height of the sample by multiplying it by the correction factor
+            _dataHeight.append(_dataSet.millivolts/profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
 
         # Returns the direction and millivolts data
         return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataMillivolts, _dataHeight

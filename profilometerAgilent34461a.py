@@ -16,6 +16,8 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
 
 
     def retrieveVoltage(self):
+        profilometerParameters.agilent34461a.query("DIAG:REMOTE")
+
         # Sets a sample size
         multimeterReadingsSampleSize = 3
         # Sets a varaible that will hold the total value of all multimeter readings for finding the average
@@ -24,15 +26,16 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
             # Checks to see if the profilometer routine has been manually stopped by the user
             if not profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                 # Returns the multimeter back to local so that the display updates
-                profilometerParameters.agilent34461a.query("DIAG:LOCAL")
+                # profilometerParameters.agilent34461a.query("DIAG:LOCAL")
                 break
             # Takes the running total and adds the current reading
             multimeterReadingsTotals = multimeterReadingsTotals + float(profilometerParameters.agilent34461a.query("MEASure:VOLTage:DC?"))
+
         # Finds the average multimeter reading
         multimeterReadingsAverage = multimeterReadingsTotals/multimeterReadingsSampleSize
 
         # Returns the multimeter back to local so that the display updates
-        # profilometerParameters.agilent34461a.query("DIAG:LOCAL")
+        profilometerParameters.agilent34461a.query("DIAG:LOCAL")
         return multimeterReadingsAverage
 
     def reachEquilibrium(self):
