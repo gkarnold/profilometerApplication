@@ -3,15 +3,18 @@ Portion of profilometer program that holds the parameters. This is shared betwee
 communication between the different threads.
 '''
 
+# Imports
+import os.path
+
 # Initializes the global paramters
 def init():
     global globalParameters
-    # global Agilent34461a
-    # global profilometerResourceManager
+    global profilometerDefaultSavePath
 
     globalParameters = {}
     agilent34461a = None
     profilometerResourceManager = None
+    profilometerDefaultSavePath = os.path.expanduser('~/Documents/Data/Profilometer')
 
 
 # Variables holding the keys for the profilometer's system controller
@@ -20,6 +23,7 @@ kHNSystemControllerProfilometer_routineStart = 'kHNSystemControllerProfilometer_
 kHNSystemControllerProfilometer_routineStepSize = 'kHNSystemControllerProfilometer_routineStepSize'
 kHNSystemControllerProfilometer_routineDirection = 'kHNSystemControllerProfilometer_routineDirection'
 kHNSystemControllerProfilometer_routineTravelDistance = 'kHNSystemControllerProfilometer_routineTravelDistance'
+kHNSystemControllerProfilometer_calibrationRatio = 'kHNSystemControllerProfilometer_calibrationRatio'
 
 # Data Storage instance ID list
 _kHNSystemControllerProfilometer_dataStorageInstances = []
