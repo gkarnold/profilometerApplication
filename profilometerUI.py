@@ -352,7 +352,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the plot data button
-    def buttonPlotData(self):
+    def buttonClickedPlotData(self):
         # While loop that checks for widgets within the plot layout and then deletes them
         # This is used to clear the plot each time a new plot is added to the plot layout
         while self.layoutPlot.count() > 0:
