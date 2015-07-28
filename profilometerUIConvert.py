@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'profilometer.ui'
 #
-# Created: Thu Jul 23 17:28:57 2015
+# Created: Tue Jul 28 16:15:15 2015
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -152,7 +152,7 @@ class Ui_formProfilometer(object):
         self.entryBoxHeader.setOverwriteMode(False)
         self.entryBoxHeader.setObjectName(_fromUtf8("entryBoxHeader"))
         self.buttonSaveData = QtGui.QPushButton(formProfilometer)
-        self.buttonSaveData.setGeometry(QtCore.QRect(40, 440, 131, 32))
+        self.buttonSaveData.setGeometry(QtCore.QRect(10, 440, 91, 32))
         self.buttonSaveData.setObjectName(_fromUtf8("buttonSaveData"))
         self.lineProfilometerControlsDataControls = QtGui.QFrame(formProfilometer)
         self.lineProfilometerControlsDataControls.setGeometry(QtCore.QRect(10, 390, 181, 20))
@@ -167,6 +167,9 @@ class Ui_formProfilometer(object):
         self.labelDataControls.setFont(font)
         self.labelDataControls.setAlignment(QtCore.Qt.AlignCenter)
         self.labelDataControls.setObjectName(_fromUtf8("labelDataControls"))
+        self.buttonPlotData = QtGui.QPushButton(formProfilometer)
+        self.buttonPlotData.setGeometry(QtCore.QRect(110, 440, 91, 32))
+        self.buttonPlotData.setObjectName(_fromUtf8("buttonPlotData"))
 
         self.retranslateUi(formProfilometer)
         QtCore.QMetaObject.connectSlotsByName(formProfilometer)
@@ -211,4 +214,5 @@ class Ui_formProfilometer(object):
         self.entryBoxHeader.setPlainText(_translate("formProfilometer", "Enter Header Text Here", None))
         self.buttonSaveData.setText(_translate("formProfilometer", "Save Data", None))
         self.labelDataControls.setText(_translate("formProfilometer", "Data Controls", None))
+        self.buttonPlotData.setText(_translate("formProfilometer", "Plot Data", None))
 

@@ -222,7 +222,7 @@ class systemController(threading.Thread):
             _dataDirection_Z.append(_dataSet.z)
             _dataVolts.append(_dataSet.volts)
             #Calculates the height of the sample by multiplying it by the correction factor
-            _dataHeight.append(_dataSet.volts/profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
+            _dataHeight.append(_dataSet.volts * profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio))
 
         # Returns the direction and volts data
         return _dataDirection_X, _dataDirection_Y, _dataDirection_Z, _dataVolts, _dataHeight

@@ -170,7 +170,7 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.entryBoxHeader.setOverwriteMode(False)
         self.entryBoxHeader.setObjectName(_fromUtf8("entryBoxHeader"))
         self.buttonSaveData = QtGui.QPushButton(formProfilometer)
-        self.buttonSaveData.setGeometry(QtCore.QRect(40, 440, 131, 32))
+        self.buttonSaveData.setGeometry(QtCore.QRect(10, 440, 91, 32))
         self.buttonSaveData.setObjectName(_fromUtf8("buttonSaveData"))
         self.lineProfilometerControlsDataControls = QtGui.QFrame(formProfilometer)
         self.lineProfilometerControlsDataControls.setGeometry(QtCore.QRect(10, 390, 181, 20))
@@ -185,6 +185,9 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.labelDataControls.setFont(font)
         self.labelDataControls.setAlignment(QtCore.Qt.AlignCenter)
         self.labelDataControls.setObjectName(_fromUtf8("labelDataControls"))
+        self.buttonPlotData = QtGui.QPushButton(formProfilometer)
+        self.buttonPlotData.setGeometry(QtCore.QRect(110, 440, 91, 32))
+        self.buttonPlotData.setObjectName(_fromUtf8("buttonPlotData"))
 
         self.retranslateUi(formProfilometer)
         QtCore.QMetaObject.connectSlotsByName(formProfilometer)
@@ -230,10 +233,12 @@ class Ui_formProfilometer(QtGui.QWidget):
         self.entryBoxHeader.setPlainText(_translate("formProfilometer", "Enter Header Text Here", None))
         self.buttonSaveData.setText(_translate("formProfilometer", "Save Data", None))
         self.labelDataControls.setText(_translate("formProfilometer", "Data Controls", None))
+        self.buttonPlotData.setText(_translate("formProfilometer", "Plot Data", None))
 
         # Button clicked commands added after generation, these direct the program to the correct method upon each button click
         self.buttonStartStop.clicked.connect(self.buttonClickedStartStop)
         self.buttonSaveData.clicked.connect(self.buttonClickedSaveData)
+        self.buttonPlotData.clicked.connect(self.buttonClickedPlotData)
         self.buttonOrigin.clicked.connect(self.buttonClickedOrigin)
         self.buttonCalibrate.clicked.connect(self.buttonClickedCalibrate)
         # Manual stage movement clicked commands
@@ -341,11 +346,35 @@ class Ui_formProfilometer(QtGui.QWidget):
         graphicsLayout = pg.GraphicsLayout(border=(100,100,100))
         graphicsLayoutWidget.addItem(graphicsLayout)
         plot1 = graphicsLayout.addPlot(title='Profile')
-        plot1.plot(x = data_X, y = data_volts)
+        plot1.plot(x = data_X, y = data_height)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
+    # Method for clicking the plot data button
+    def buttonPlotData(self):
+        # While loop that checks for widgets within the plot layout and then deletes them
+        # This is used to clear the plot each time a new plot is added to the plot layout
+        while self.layoutPlot.count() > 0:
+            item = self.layoutPlot.takeAt(0)
+            if not item:
+                continue
+            w = item.widget()
+            if w:
+                w.deleteLater()
+
+        # Retrieves the direction and millivolts data from the system controller
+        [data_X, data_Y, data_Z, data_volts, data_height] = self.systemController.retrieveData()
+
+        # Displays the plot of the data that was also saved
+        graphicsLayoutWidget = pg.GraphicsLayoutWidget()
+        graphicsLayout = pg.GraphicsLayout(border=(100,100,100))
+        graphicsLayoutWidget.addItem(graphicsLayout)
+        plot1 = graphicsLayout.addPlot(title='Profile')
+        plot1.plot(x = data_X, y = data_height)
+        plot1.setLabel('bottom','Distance (mm)')
+        plot1.setLabel('left','Height (mm)')
+        self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the origin button.
     # This takes the profilometer to the origin.
