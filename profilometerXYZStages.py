@@ -28,7 +28,7 @@ class XYZStages(profilometerStages.stages):
         # Checks for potential errors connecting to the XPS System (Code from XPS manufacture)
         def displayErrorAndClose (socketId, errorCode, APIName):
 			if (errorCode != -2) and (errorCode != -108):
-				[errorCode2, errorString] = myxps.ErrorStringGet(socketId, errorCode)
+				[errorCode2, errorString] = self._XPSSystem.ErrorStringGet(socketId, errorCode)
 				if (errorCode2 != 0):
 					print (APIName + ': ERROR ' + str(errorCode))
 				else:
@@ -38,13 +38,13 @@ class XYZStages(profilometerStages.stages):
 					print (APIName + ': TCP timeout')
 				if (errorCode == -108):
 					print (APIName + ': The TCP/IP connection was closed by an administrator')
-			myxps.TCP_CloseSocket(socketId)
+			self._XPSSystem.TCP_CloseSocket(socketId)
 			return
 
         # Creates an instance of the XPS system
         self._XPSSystem = XPS_Q8_drivers.XPS()
 
-        # Gets the socketIDs for the created system
+        ## Gets the socketIDs for the created system
         # SocketID1 is for initiating stage movements
         self._socketID1 = self._XPSSystem.TCP_ConnectToServer('192.168.0.254',5001,20) # Returns -1 if connection error occurs
         # SocketID2 is for interrupting stage movements
@@ -84,7 +84,7 @@ class XYZStages(profilometerStages.stages):
     def moveStageRelative(self, direction, distance):
         self._XPSSystem.GroupMoveRelative(self._socketID1,direction,distance)
 
-    # Method for aborting stage movement. Aborts all directions.
+    # Method for aborting stage movement (aborts all directions)
     def moveStageAbort(self):
         self._XPSSystem.GroupMoveAbort(self._socketID2, self.positioner_X)
         self._XPSSystem.GroupMoveAbort(self._socketID2, self.positioner_Y)
