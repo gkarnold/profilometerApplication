@@ -349,6 +349,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         plot1.plot(x = data_X, y = data_height)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
+        plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
+        plot1.setYRange(-1.0,1.0)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the plot data button
@@ -374,6 +376,8 @@ class Ui_formProfilometer(QtGui.QWidget):
         plot1.plot(x = data_X, y = data_height)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
+        plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
+        plot1.setYRange(-1,1)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the origin button.
