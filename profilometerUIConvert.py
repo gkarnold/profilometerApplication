@@ -23,7 +23,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_formProfilometer(object):
+class Ui_formProfilometer(QtGui.QWidget):
     def setupUi(self, formProfilometer):
         formProfilometer.setObjectName(_fromUtf8("formProfilometer"))
         formProfilometer.resize(655, 489)
