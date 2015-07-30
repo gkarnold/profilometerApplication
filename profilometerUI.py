@@ -155,6 +155,9 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
             # Includes the calibration ratio used below the header data
             _dataWriter.writerow(('# Calibration ratio used: ' + str(profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_calibrationRatio)),''))
 
+            # Includes the direction of the scan
+            _dataWriter.writerow(('# Scan direction: ' + str(self.retrieveProfilometerRoutineDirection())))
+
             # Includes the date and time of the save
             _dataWriter.writerow(('Date and time: ' + str(datetime.datetime.now()),''))
 
