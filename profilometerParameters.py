@@ -5,16 +5,19 @@ communication between the different threads.
 
 # Imports
 import os.path
+import threading
 
 # Initializes the global paramters
 def init():
     global globalParameters
     global profilometerDefaultSavePath
+    global dataThreadLock
 
     globalParameters = {}
     agilent34461a = None
     profilometerResourceManager = None
     profilometerDefaultSavePath = os.path.expanduser('~/Documents/Data/Profilometer')
+    dataThreadLock = threading.Lock()
 
 
 # Variables holding the keys for the profilometer's system controller
@@ -24,6 +27,7 @@ kHNSystemControllerProfilometer_routineStepSize = 'kHNSystemControllerProfilomet
 kHNSystemControllerProfilometer_routineDirection = 'kHNSystemControllerProfilometer_routineDirection'
 kHNSystemControllerProfilometer_routineTravelDistance = 'kHNSystemControllerProfilometer_routineTravelDistance'
 kHNSystemControllerProfilometer_calibrationRatio = 'kHNSystemControllerProfilometer_calibrationRatio'
+kHNSystemControllerProfilometer_newDataPoint = 'kHNSystemControllerProfilometer_newDataPoint'
 
 # Data Storage instance ID list
 _kHNSystemControllerProfilometer_dataStorageInstances = []
