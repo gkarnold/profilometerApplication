@@ -159,6 +159,15 @@ class systemController(threading.Thread):
             # Creates an instance of the data class with the current data
             profilometerDataClass.profilometerData(x,y,z,multimeterData)
 
+            # Acquires the data thread lock
+            profilometerParameters.dataThreadLock.acquire()
+            print('dataThreadLock acquired (SC)')
+            # Updates the new data point to true
+            profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_newDataPoint,True)
+            # Releases the data thread lock
+            profilometerParameters.dataThreadLock.release()
+            print('dataThreadLock released (SC)')
+
             # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
             _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[stepSize/1000]))
             _stagesInstanceThread.start()
