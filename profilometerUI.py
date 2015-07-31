@@ -85,19 +85,20 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
                 QtGui.QApplication.processEvents()
 
                 try:
+                    # If statement that checks to see if a new data point has been added
                     if profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_newDataPoint):
                         # Calls the plot data routine
                         self.buttonClickedPlotData()
-                        print('plot')
+                        # print('plot')
 
                         # Acquires the data thread lock
                         profilometerParameters.dataThreadLock.acquire()
-                        print('dataThreadLock acquired (UI)')
+                        # print('dataThreadLock acquired (UI)')
                         # Sets the new data point to false
                         profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_newDataPoint,False)
                         # Releases the data thread lock
                         profilometerParameters.dataThreadLock.release()
-                        print('dataThreadLock released (UI)')
+                        # print('dataThreadLock released (UI)')
                 except:
                     pass
                 # # For loop that causes the plot to be updated once every second while still allowing the loop to be interrupted
@@ -182,8 +183,8 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
         plot1.plot(x = data_X, y = data_height)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
-        plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
-        plot1.setYRange(-1.0,1.0)
+        # plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
+        # plot1.setYRange(-1.0,1.0)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the plot data button
@@ -209,8 +210,8 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
         plot1.plot(x = data_X, y = data_height)
         plot1.setLabel('bottom','Distance (mm)')
         plot1.setLabel('left','Height (mm)')
-        plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
-        plot1.setYRange(-1,1)
+        # plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
+        # plot1.setYRange(-1,1)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the origin button.

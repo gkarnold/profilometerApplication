@@ -78,7 +78,7 @@ class systemController(threading.Thread):
 
     # Method to move the stages to the origin (profilometer start position) (2,41,9.4) per Chris
     def moveStageToOrigin(self):
-        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[2,41,9.4])
+        self.substrateStages.moveStageAbsolute(self.substrateStages.macroGroup,[2,41,8.4])
 
     # Method to determine if the profilometer is properly calibrated
     # Moves stage by 0.5 mm in Z and checks to see how much the omron sensor thinks the stage moved
@@ -161,12 +161,12 @@ class systemController(threading.Thread):
 
             # Acquires the data thread lock
             profilometerParameters.dataThreadLock.acquire()
-            print('dataThreadLock acquired (SC)')
+            # print('dataThreadLock acquired (SC)')
             # Updates the new data point to true
             profilometerParameters.updateDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_newDataPoint,True)
             # Releases the data thread lock
             profilometerParameters.dataThreadLock.release()
-            print('dataThreadLock released (SC)')
+            # print('dataThreadLock released (SC)')
 
             # Moves the stages by creating a stage thread and then running that thread for the movement amount and direction
             _stagesInstanceThread = threading.Thread(target=_stagesInstance.moveStageRelative,args=(_movementDirection,[stepSize/1000]))
