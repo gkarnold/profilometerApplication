@@ -19,7 +19,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         # profilometerParameters.agilent34461a.query("DIAG:REMOTE")
 
         # Sets a sample size
-        multimeterReadingsSampleSize = 3
+        multimeterReadingsSampleSize = 1
         # Sets a varaible that will hold the total value of all multimeter readings for finding the average
         multimeterReadingsTotals = 0.0
         for i in range(multimeterReadingsSampleSize):
@@ -35,7 +35,7 @@ class agilent34461aClass(profilometerMultimeter.multimeter):
         multimeterReadingsAverage = multimeterReadingsTotals/multimeterReadingsSampleSize
 
         # Returns the multimeter back to local so that the display updates
-        # profilometerParameters.agilent34461a.query("DIAG:LOCAL")
+        # profilometerParameters.agilent34461a.query("DIAG:LOCAL") # Command does not work for this device (no known command)
         return multimeterReadingsAverage
 
     def reachEquilibrium(self):
