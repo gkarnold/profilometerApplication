@@ -185,6 +185,7 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
         plot1.setLabel('left','Height (mm)')
         # plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
         # plot1.setYRange(-1.0,1.0)
+        plot1.showGrid(True, True, 0.75)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the plot data button
@@ -212,6 +213,7 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
         plot1.setLabel('left','Height (mm)')
         # plot1.setXRange(0,(float(self.entryBoxTravelDistance.text()) + 2.0))
         # plot1.setYRange(-1,1)
+        plot1.showGrid(True, True, 0.75)
         self.layoutPlot.addWidget(graphicsLayoutWidget)
 
     # Method for clicking the origin button.
