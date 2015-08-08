@@ -15,8 +15,8 @@ import profilometerSystemController # File containing the System Controller
 
 
 def profilometerApplication():
-    # Initalize the global variables
-    profilometerParameters.init()
+    # # Initalize the global variables
+    # profilometerParameters.init()
 
 
     # Starting up the UI
