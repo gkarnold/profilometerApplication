@@ -30,7 +30,7 @@ kHNSystemControllerProfilometer_calibrationRatio = 'kHNSystemControllerProfilome
 kHNSystemControllerProfilometer_newDataPoint = 'kHNSystemControllerProfilometer_newDataPoint'
 
 # Data Storage instance ID list
-_kHNSystemControllerProfilometer_dataStorageInstances = []
+kHNSystemControllerProfilometer_dataStorageInstances = []
 
 
 
@@ -53,14 +53,14 @@ def retrieveDictionary():
 
 # Function to update the list of data storage instances
 def updateDataStorageInstances(updatedInstanceID):
-    global _kHNSystemControllerProfilometer_dataStorageInstances
-    _kHNSystemControllerProfilometer_dataStorageInstances.append(updatedInstanceID)
+    global kHNSystemControllerProfilometer_dataStorageInstances
+    kHNSystemControllerProfilometer_dataStorageInstances.append(updatedInstanceID)
 
 # Functon to retrieve the list of data storage instances
 def retrieveDataStorageInstances():
-    return _kHNSystemControllerProfilometer_dataStorageInstances
+    return kHNSystemControllerProfilometer_dataStorageInstances
 
 # Functin to clear the list of data storage instances
 def clearDataStorageInstances():
-    global _kHNSystemControllerProfilometer_dataStorageInstances
-    _kHNSystemControllerProfilometer_dataStorageInstances = []
+    global kHNSystemControllerProfilometer_dataStorageInstances
+    kHNSystemControllerProfilometer_dataStorageInstances = []

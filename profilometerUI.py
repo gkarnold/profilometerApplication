@@ -80,7 +80,7 @@ class Ui_formProfilometer(profilometerUIConvert.Ui_formProfilometer):
             self.buttonStartStop.setStyleSheet('background-color: red;border:0px;border-radius:10')
             print('Profilometer Routine Started')
 
-            ## Routine to test realtime plotting
+            ## Routine plot in realtime
             # Runs a while loop that checks to see if the routine is running
             while profilometerParameters.retrieveDictionaryParameter(profilometerParameters.kHNSystemControllerProfilometer_routineRunning):
                 # Asks the GUI to process any events manually
